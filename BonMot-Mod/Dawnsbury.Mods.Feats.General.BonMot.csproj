@@ -1,5 +1,16 @@
 <Project Sdk="Microsoft.NET.Sdk">
 	<Import Project="../Dawnsbury.Mod.targets" />
+  <ItemGroup>
+    <None Update="CaptainSmirk.png">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Update="DairyBottle.png">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Update="GuybrushWithSword.png">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+  </ItemGroup>
 	<PropertyGroup>
 		<InstallIntoDevelopmentEnvironment>false</InstallIntoDevelopmentEnvironment>
 	</PropertyGroup>
