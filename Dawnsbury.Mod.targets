@@ -10,7 +10,10 @@
     <ItemGroup>
         <Reference Include="Dawnsbury Days.dll">
             <HintPath>../../../../DawnsburyDlls/Dawnsbury Days.dll</HintPath>
-        </Reference>
+	</Reference>
+	<Reference Include="Common">
+      	    <HintPath>../../../../DawnsburyDlls/Common.dll</HintPath>
+    	</Reference>
     </ItemGroup>
     <Target Name="CopyToGameModsFolder" AfterTargets="Build" Condition="'$(InstallIntoDevelopmentEnvironment)' != 'false'">
         <Copy SourceFiles="$(TargetPath)" DestinationFolder="..../../../DawnburyMods" />
