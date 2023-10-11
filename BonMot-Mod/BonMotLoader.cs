@@ -9,6 +9,10 @@ using Dawnsbury.Core.Mechanics.Core;
 using Dawnsbury.Display.Illustrations;
 using Dawnsbury.Core.Intelligence;
 using System.Linq;
+using System;
+using System.IO;
+using System.Collections.Generic;
+using Microsoft.Xna.Framework;
 
 namespace Dawnsbury.Mods.Feats.General.BonMot;
 
@@ -17,6 +21,12 @@ namespace Dawnsbury.Mods.Feats.General.BonMot;
 /// </summary>
 public class BonMotLoader
 {
+
+    public const string defaultInsult = "You fight like a dairy farmer!";
+    public const string defaultRetort = "How appropriate, you fight like a cow!";
+    public const string defaultCritInsult = "I will milk every drop of blood from your body!";
+    private const string logDialogFormat = "{0} says, \"{1}\"";
+
     /// <summary>
     /// here to add the linguistic trait
     /// </summary>
@@ -24,20 +34,70 @@ public class BonMotLoader
     [DawnsburyDaysModMainMethod]
     public static void LoadMod()
     {
+        List<Tuple<string, string, string>> insultDirectory = LoadInsultDirectory();
         //registering the linguistic trait so we can add it to Bon Mot
         Linguistic = ModManager.RegisterTrait(
             "Linguistic",
             new TraitProperties("Linguistic",true, "Only works on enemies that speak common")
             );
-        ModManager.AddFeat(CreateBonMotFeat());
+        ModManager.AddFeat(CreateBonMotFeat(insultDirectory));
+    }
+
+    /// <summary>
+    /// loads the insult directory from the insults.txt file
+    /// </summary>
+    /// <returns>the constructed directory</returns>
+    public static List<Tuple<string, string, string>> LoadInsultDirectory()
+    {
+        List<Tuple<string, string, string>> insultDirectory = new List<Tuple<string, string, string>>();
+
+        try
+        {
+            string directory = Directory.GetCurrentDirectory();
+            directory = Directory.GetParent(directory).FullName;
+            directory = Path.Combine(directory, "CustomMods", "BonMotResources","Insults.txt");
+            StreamReader sr = new StreamReader(directory);
+            string line = sr.ReadLine();
+            while (line != null)
+            {
+                line = line.Trim();
+                List<string> lines = line.Replace("\" \"", "\"").Split("\"").ToList();
+                lines.RemoveAll(l => l==string.Empty);
+                if (lines.Count != 3)
+                {
+                    if (insultDirectory.Count == 0)
+                    {
+                        insultDirectory.Add(new Tuple<string, string, string>(defaultInsult, defaultRetort, defaultCritInsult));
+                    }
+                    return insultDirectory;
+                }
+                Tuple<string, string, string> thisSet = new Tuple<string, string, string>(lines[0], lines[1], lines[2]);
+                insultDirectory.Add(thisSet);
+                line = sr.ReadLine();
+            }
+            sr.Close();
+        }
+        catch(IOException ex)
+        {
+
+        }
+        if(insultDirectory.Count == 0)
+        {
+            insultDirectory.Add(new Tuple<string, string, string>(defaultInsult, defaultRetort, defaultCritInsult));
+        }
+        return insultDirectory;
     }
 
     /// <summary>
     /// creates the Bon Mot feat, which adds the available Bot Mot action which can cause negatives to will saves and perception
     /// </summary>
     /// <returns>the created feat</returns>
-    private static Feat CreateBonMotFeat()
+    private static Feat CreateBonMotFeat(List<Tuple<string, string, string>> insultDirectory)
     {
+        Random rand = new Random(DateTime.Now.GetHashCode());
+
+        string[] badInsults = { "Boy are you ugly!", "What an idiot!", "You call yourself a creature!" };
+        string[] terribleInsults = { "I am rubber, you are glue", "I'm shaking, I'm shaking!" };
 
         return new TrueFeat(
                 FeatName.CustomFeat,
@@ -56,10 +116,15 @@ public class BonMotLoader
             {
                 creature.AddQEffect(new QEffect("Bon Mot", "You launch an insightful quip at a foe, distracting them.")
                 {
-                    ProvideMainAction = (qfself)=>
+                    ProvideActionIntoPossibilitySection = (qfself,possibilitySection)=>
                     {
+                        if(possibilitySection.PossibilitySectionId != PossibilitySectionId.OtherManeuvers)
+                        {
+                            return null;
+                        }
+
                         var dude = qfself.Owner;
-                        CombatAction bonmotAction = new CombatAction(dude, new ModdedIllustration(@"CaptainSmirk.png"), "Bon Mot", new Trait[] { Trait.Auditory, Trait.Concentrate, Trait.Emotion, Trait.General, Trait.Mental, Trait.Skill, Linguistic },
+                        CombatAction bonmotAction = new CombatAction(dude, new ModdedIllustration(@"BonMotResources\CaptainSmirk.png"), "Bon Mot", new Trait[] { Trait.Auditory, Trait.Concentrate, Trait.Emotion, Trait.General, Trait.Mental, Trait.Skill, Linguistic },
                             "Choose a foe within 30 feet and roll a Diplomacy check against the target's Will DC.\n\nCritical Success: The target is distracted and takes a –3 status penalty to Perception and Will saves for 1 minute. " +
                             "The target can end the effect early with a retort to your Bon Mot. This can either be a single action that has the concentrate trait or an appropriate skill action to frame their retort. " +
                             "\r\nSuccess: As critical success, but the penalty is –2." +
@@ -72,7 +137,13 @@ public class BonMotLoader
                         return new ActionPossibility(bonmotAction                     
                             .WithEffectOnEachTarget(async (spell, caster, target, result) =>
                             {
-                                var dairyBottle = new ModdedIllustration(@"DairyBottle.png");
+                                int insultID = rand.Next(0, insultDirectory.Count); 
+
+                                string successInsult = insultDirectory[insultID].Item1;
+                                string critInsult = insultDirectory[insultID].Item3;
+                                string insultRetort = insultDirectory[insultID].Item2;
+
+                                var dairyBottle = new ModdedIllustration(@"BonMotResources\DairyBottle.png");
                                 if (result == CheckResult.CriticalSuccess)
                                 {
                                     QEffect bonMotCritEffect = new QEffect("Bon Mot Crit Success", "-3 status penalty to Perception and Will saves", ExpirationCondition.CountsDownAtEndOfYourTurn, caster, dairyBottle)
@@ -99,14 +170,15 @@ public class BonMotLoader
                                             
                                             //retort removes bon mot debuff with an action, but only if the bon mot creature is within 30 feet, can be seen by the retort user. AI also prioritizes attacking at least once.
                                             return new ActionPossibility(
-                                                    new CombatAction(targetDude, new ModdedIllustration(@"GuybrushWithSword.png"), "Retort", new Trait[] { Trait.Auditory, Trait.Concentrate, Trait.Mental, Linguistic },
+                                                    new CombatAction(targetDude, new ModdedIllustration(@"BonMotResources\GuybrushWithSword.png"), "Retort", new Trait[] { Trait.Auditory, Trait.Concentrate, Trait.Mental, Linguistic },
                                                     "retort to get rid of a Bon Mot debuff", Target.Self((innerSelf, ai) => (ai.Tactic == Tactic.Standard && (innerSelf.Actions.AttackedThisTurn.Any() || (innerSelf.Spellcasting != null)) && innerSelf.DistanceTo(caster) <= 6 && innerSelf.CanSee(caster))
                                                     ? AIConstants.EXTREMELY_PREFERRED : AIConstants.NEVER))
                                                     .WithActionCost(1)
                                                     .WithEffectOnSelf(async (innerSelf) =>
                                                     {
                                                         innerSelf.RemoveAllQEffects((q) => (q.Name == "Bon Mot Crit Success" || q.Name == "Bon Mot Success") && q.Source == caster);
-                                                        innerSelf.Battle.CombatLog.Add(new Core.LogLine(2, innerSelf.Name + " says, \"First you'd better stop waving it like a feather duster.\"", "Retort", "First you'd better stop waving it like a feather duster."));
+                                                        innerSelf.Battle.CombatLog.Add(new Core.LogLine(2, string.Format(logDialogFormat, innerSelf.Name,insultRetort), "Retort", insultRetort));
+                                                        innerSelf.Occupies.Overhead(insultRetort, Color.Green);
                                                     }));
                                         }
                                     };
@@ -114,7 +186,8 @@ public class BonMotLoader
                                     target.RemoveAllQEffects((q) => (q.Name == "Bon Mot Crit Success" || q.Name == "Bon Mot Success") && q.Source == caster);
                                     target.AddQEffect(bonMotCritEffect.WithExpirationAtStartOfSourcesTurn(caster, 10));
                                     caster.RemoveAllQEffects(q => q.Name == "Bon Mot Critical Failure");
-                                    caster.Battle.CombatLog.Add(new Core.LogLine(2, caster.Name + " says, \"My tongue is sharper than any sword.\"", "Bon Mot", "My tongue is sharper than any sword."));
+                                    caster.Battle.CombatLog.Add(new Core.LogLine(2, string.Format(logDialogFormat, caster.Name, critInsult), "Bon Mot", critInsult));
+                                    caster.Occupies.Overhead(critInsult, Color.Green);
                                 }
                                 else if (result == CheckResult.Success)
                                 {
@@ -142,14 +215,15 @@ public class BonMotLoader
 
                                             //retort removes bon mot debuff with an action, but only if the bon mot creature is within 30 feet, can be seen by the retort user. AI also prioritizes attacking at least once unless they can cast spells.
                                             return new ActionPossibility(
-                                                    new CombatAction(targetDude, new ModdedIllustration(@"GuybrushWithSword.png"), "Retort", new Trait[] { Trait.Auditory, Trait.Concentrate, Trait.Mental, Linguistic },
+                                                    new CombatAction(targetDude, new ModdedIllustration(@"BonMotResources\GuybrushWithSword.png"), "Retort", new Trait[] { Trait.Auditory, Trait.Concentrate, Trait.Mental, Linguistic },
                                                     "retort to get rid of a Bon Mot debuff", Target.Self((innerSelf, ai) => (ai.Tactic == Tactic.Standard && (innerSelf.Actions.AttackedThisTurn.Any() || (innerSelf.Spellcasting != null)) && innerSelf.DistanceTo(caster) <= 6 && innerSelf.CanSee(caster))
                                                     ? AIConstants.EXTREMELY_PREFERRED : AIConstants.NEVER))
                                                     .WithActionCost(1)
                                                     .WithEffectOnSelf(async (innerSelf) =>
                                                     {
                                                         innerSelf.RemoveAllQEffects((q) => (q.Name == "Bon Mot Crit Success" || q.Name == "Bon Mot Success") && q.Source == caster);
-                                                        innerSelf.Battle.CombatLog.Add(new Core.LogLine(2, innerSelf.Name + " says, \"How appropriate, you fight like a cow\"", "Retort", "How appropriate, you fight like a cow"));
+                                                        innerSelf.Battle.CombatLog.Add(new Core.LogLine(2, string.Format(logDialogFormat, innerSelf.Name, insultRetort), "Retort", insultRetort));
+                                                        innerSelf.Occupies.Overhead(insultRetort, Color.Green);
                                                     }));
                                         }
                                     };
@@ -157,10 +231,20 @@ public class BonMotLoader
                                     target.RemoveAllQEffects((q) => (q.Name == "Bon Mot Success") && q.Source == caster);
                                     target.AddQEffect(bonMotSuccessEffect.WithExpirationAtStartOfSourcesTurn(caster, 10));
                                     caster.RemoveAllQEffects(q => q.Name == "Bon Mot Critical Failure");
-                                    caster.Battle.CombatLog.Add(new Core.LogLine(2, caster.Name + " says, \"You fight like a dairy farmer\"", "Bon Mot", "You fight like a dairy farmer"));
+                                    caster.Battle.CombatLog.Add(new Core.LogLine(2, string.Format(logDialogFormat, caster.Name, successInsult), "Bon Mot", successInsult));
+                                    caster.Occupies.Overhead(successInsult, Color.YellowGreen);
+                                }
+                                else if(result == CheckResult.Failure)
+                                {
+                                    int failNum = rand.Next(0, 3);
+                                    string failString = badInsults[failNum];
+                                    caster.Battle.CombatLog.Add(new Core.LogLine(2, string.Format(logDialogFormat, caster.Name, failString), "Bon Mot", failString));
+                                    caster.Occupies.Overhead(failString, Color.Yellow);
                                 }
                                 if (result == CheckResult.CriticalFailure)
                                 {
+                                    int failNum = rand.Next(0, 2);
+                                    string failString = terribleInsults[failNum];
                                     caster.AddQEffect(new QEffect("Bon Mot Critical Failure", "-2 status penalty to Perception and Will saves", ExpirationCondition.CountsDownAtEndOfYourTurn, caster, dairyBottle)
                                     {
                                         BonusToDefenses = (qfSelf, incomingEffect, targetedDefense) =>
@@ -180,8 +264,9 @@ public class BonMotLoader
                                             return null;
                                         }
                                     }.WithExpirationAtStartOfSourcesTurn(caster, 10));
+                                    caster.Battle.CombatLog.Add(new Core.LogLine(2, string.Format(logDialogFormat, caster.Name, failString), "Bon Mot", failString));
+                                    caster.Occupies.Overhead(failString, Color.Red);
                                 }
-
                             }));
                     }
                 });
