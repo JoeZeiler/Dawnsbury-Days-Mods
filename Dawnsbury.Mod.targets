@@ -8,12 +8,15 @@
     <!-- Dawnsbury Studios uses the following item group to interact with Dawnsbury Days source code. You don't have access to the source code so comment it out. -->
     <!--    Comment the following code out: -->
     <ItemGroup>
-        <Reference Include="Dawnsbury Days.dll">
+        <Reference Include="Dawnsbury Days">
             <HintPath>../../../../DawnsburyDlls/Dawnsbury Days.dll</HintPath>
 	</Reference>
 	<Reference Include="Common">
       	    <HintPath>../../../../DawnsburyDlls/Common.dll</HintPath>
     	</Reference>
+      <Reference Include="MonoGame.Framework">
+        <HintPath>..\..\..\..\DawnsburyDlls\MonoGame.Framework.dll</HintPath>
+      </Reference>
     </ItemGroup>
     <Target Name="CopyToGameModsFolder" AfterTargets="Build" Condition="'$(InstallIntoDevelopmentEnvironment)' != 'false'">
         <Copy SourceFiles="$(TargetPath)" DestinationFolder="..../../../DawnburyMods" />
