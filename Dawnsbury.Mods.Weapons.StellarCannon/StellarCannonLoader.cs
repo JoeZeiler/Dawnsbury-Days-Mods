@@ -15,6 +15,9 @@ using System.Linq;
 
 namespace Dawnsbury.Mods.Weapons.StellarCannon;
 
+/// <summary>
+/// adds the stellar cannon and its variants from the starfinder 2E field test with some small modifications
+/// </summary>
 public class StellarCannonLoader
 {
     private static Trait Analogue;
@@ -23,6 +26,9 @@ public class StellarCannonLoader
     private static Trait Area;
     private static ModdedIllustration StellarCannonIllustration;
 
+    /// <summary>
+    /// loads the appropriate mods
+    /// </summary>
     [DawnsburyDaysModMainMethod]
     public static void LoadMod()
     {
@@ -36,10 +42,11 @@ public class StellarCannonLoader
         ModManager.RegisterNewItemIntoTheShop("StellarCannon0", CreateStellarCannon);
         ModManager.RegisterNewItemIntoTheShop("StellarCannon1", CreateTacticalStellarCannon);
         ModManager.RegisterNewItemIntoTheShop("StellarCannon2", CreateAdvancedStellarCannon);
-
-        //ModManager.AddFeat(CreateBonMotFeat(insultDirectory));
     }
 
+    /// <summary>
+    /// creates the area fire and reload actions for equipped area weapons
+    /// </summary>
     private static Action<Creature> ApplyAreaFire = (creature) =>
     {
         creature.AddQEffect(new QEffect()
@@ -54,14 +61,19 @@ public class StellarCannonLoader
                 }
                 foreach (var areaItem in areaItems)
                 {
-                    generateAreaFireActions(qfSelf.Owner,areaItem);
+                    GenerateAreaFireActions(qfSelf.Owner,areaItem);
                 }
             },
 
         });
     };
 
-    private static void generateAreaFireActions(Creature itemOwner, AreaItem areaItem)
+    /// <summary>
+    /// creates the actions to give the creature for the given area weapon
+    /// </summary>
+    /// <param name="itemOwner">the wielder of the weapon</param>
+    /// <param name="areaItem">the item the action correlates to</param>
+    private static void GenerateAreaFireActions(Creature itemOwner, AreaItem areaItem)
     {
         string areaType = "burst";
         int effectRange = effectRange = areaItem.AreaRange;
@@ -135,6 +147,11 @@ public class StellarCannonLoader
         
     }
 
+    /// <summary>
+    /// creates the base stellar cannon
+    /// </summary>
+    /// <param name="iName">input from the game</param>
+    /// <returns>the stellar cannon item</returns>
     private static Item CreateStellarCannon(ItemName iName)
     {
         AreaItem stellarCannon = new AreaItem(iName, IllustrationName.FireRay, "Stellar Cannon, Commercial", 0, 4, new[] { Analogue, Unwieldy, Trait.Ranged, Trait.TwoHanded, AreaBurst10ft, Trait.Martial})
@@ -153,6 +170,11 @@ public class StellarCannonLoader
         return stellarCannon;
     }
 
+    /// <summary>
+    /// creates the tactical stellar cannnon
+    /// </summary>
+    /// <param name="iName">input from the game</param>
+    /// <returns>the stellar cannon item</returns>
     private static Item CreateTacticalStellarCannon(ItemName iName)
     {
         AreaItem stellarCannon = new AreaItem(iName, IllustrationName.FireRay, "Stellar Cannon, Tactical", 0, 39, new[] { Analogue, Unwieldy, Trait.Ranged, Trait.TwoHanded, AreaBurst10ft, Trait.Martial })
@@ -171,6 +193,11 @@ public class StellarCannonLoader
         return stellarCannon;
     }
 
+    /// <summary>
+    /// creates the advanced stellar cannnon
+    /// </summary>
+    /// <param name="iName">input from the game</param>
+    /// <returns>the stellar cannon item</returns>
     private static Item CreateAdvancedStellarCannon(ItemName iName)
     {
         AreaItem stellarCannon = new AreaItem(iName, IllustrationName.FireRay, "Stellar Cannon, Advanced", 0,104, new[] { Analogue, Unwieldy, Trait.Ranged, Trait.TwoHanded, AreaBurst10ft, Trait.Martial })
@@ -191,6 +218,9 @@ public class StellarCannonLoader
 
 }
 
+/// <summary>
+/// stores ephemeral properties for area weapons
+/// </summary>
 public class EphemeralAreaProperties : EphemeralItemProperties
 {
     public int CurrentMagazine
@@ -199,6 +229,9 @@ public class EphemeralAreaProperties : EphemeralItemProperties
     }
 }
 
+/// <summary>
+/// stores properties for area items
+/// </summary>
 public class AreaItem : Item
 {
     public enum AreaTypes
