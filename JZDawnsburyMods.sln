@@ -1,0 +1,31 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 17
+VisualStudioVersion = 17.7.34031.279
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Dawnsbury.Mods.Weapons.StarfinderWeapons", "Dawnsbury.Mods.Weapons.StellarCannon\Dawnsbury.Mods.Weapons.StarfinderWeapons.csproj", "{5E13BC5F-4934-4A2F-AA9E-DE57D27CC04F}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Dawnsbury.Mods.Feats.General.BonMot", "BonMot-Mod\Dawnsbury.Mods.Feats.General.BonMot.csproj", "{F4D9EA05-48EC-4862-ABF5-12E5D1506E3E}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{5E13BC5F-4934-4A2F-AA9E-DE57D27CC04F}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{5E13BC5F-4934-4A2F-AA9E-DE57D27CC04F}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{5E13BC5F-4934-4A2F-AA9E-DE57D27CC04F}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{5E13BC5F-4934-4A2F-AA9E-DE57D27CC04F}.Release|Any CPU.Build.0 = Release|Any CPU
+		{F4D9EA05-48EC-4862-ABF5-12E5D1506E3E}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{F4D9EA05-48EC-4862-ABF5-12E5D1506E3E}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{F4D9EA05-48EC-4862-ABF5-12E5D1506E3E}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{F4D9EA05-48EC-4862-ABF5-12E5D1506E3E}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {8F363164-0BD9-42DA-AD17-2821BAD1DA8E}
+	EndGlobalSection
+EndGlobal
