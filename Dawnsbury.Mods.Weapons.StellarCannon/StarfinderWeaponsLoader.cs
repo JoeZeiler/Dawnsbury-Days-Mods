@@ -12,27 +12,35 @@ using Dawnsbury.Core.Creatures;
 using Dawnsbury.Core;
 using Dawnsbury.Core.CharacterBuilder.FeatsDb.Common;
 using System.Linq;
-using Dawnsbury.Core.Creatures.Parts;
+using System.IO;
 using System.Collections.Generic;
-using Dawnsbury.Core.CharacterBuilder;
+using System.Threading.Tasks;
 
-namespace Dawnsbury.Mods.Weapons.StellarCannon;
+namespace Dawnsbury.Mods.Weapons.StarfinderWeapons;
 
 /// <summary>
 /// adds the stellar cannon and its variants from the starfinder 2E field test with some small modifications
 /// </summary>
-public class StarfinderWeaponsLoader
+public partial class StarfinderWeaponsLoader
 {
     private static Trait Analogue;
+    private static Trait Tech;
     private static Trait Unwieldy;
     private static Trait AreaBurst10ft;
     private static Trait Area;
     private static Trait AreaCone;
     private static Trait AreaLine;
     private static Trait Concussive;
-    private static ModdedIllustration StellarCannonIllustration;
-    private static ModdedIllustration ScattergunIllustration;
-    private static ModdedIllustration FlamePistolIllustration;
+    private static Trait Automatic;
+    private static Trait AutomaticTechnical;
+    private static Trait AreaTechnical;
+    private static Trait Gun;
+    private static Trait StarfinderGun;
+    private static ModdedIllustration StellarCannonIllustration = null;
+    private static ModdedIllustration ScattergunIllustration = null;
+    private static ModdedIllustration FlamePistolIllustration = null;
+    private static ModdedIllustration RotolaserIllustration = null;
+    private static ModdedIllustration LaserPistolIllustration = null;
 
     /// <summary>
     /// loads the appropriate mods
@@ -40,18 +48,44 @@ public class StarfinderWeaponsLoader
     [DawnsburyDaysModMainMethod]
     public static void LoadMod()
     {
-        Analogue = ModManager.RegisterTrait("Automatic", new TraitProperties("Analogue", true, "does not rely on digital technology"));
+        Analogue = ModManager.RegisterTrait("Analogue", new TraitProperties("Analogue", true, "does not rely on digital technology"));
+        Tech = ModManager.RegisterTrait("Tech", new TraitProperties("Tech", true, "Incorporates electronics,computer systems, and power sources.", true));
         Unwieldy = ModManager.RegisterTrait("Unwieldy", new TraitProperties("Unwieldy", true, "You can’t use an unwieldy weapon more than once per round and can’t use it to Strike as part of a reaction",true));
-        AreaBurst10ft = ModManager.RegisterTrait("AreaBurst10ft", new TraitProperties("Area (Burst 10 ft.)", true, "Weapons with this trait can only fire using the Area Fire action.", true));
-        AreaCone = ModManager.RegisterTrait("AreaCone", new TraitProperties("Area (Cone)", true, "Weapons with this trait can only fire using the Area Fire action.", true));
-        AreaLine = ModManager.RegisterTrait("AreaLine", new TraitProperties("Area (Line)", true, "Weapons with this trait can only fire using the Area Fire action.", true));
+        AreaBurst10ft = ModManager.RegisterTrait("AreaBurst10ft", new TraitProperties("Area (Burst 10 ft.)", true, "Weapons with this trait can only fire using the Area Fire action. The DC is equal to 10 + your attack bonus with this weapon using strength or constitution (except expert proficiency is treated as trained).", true));
+        AreaCone = ModManager.RegisterTrait("AreaCone", new TraitProperties("Area (Cone)", true, "Weapons with this trait can only fire using the Area Fire action. The DC is equal to 10 + your attack bonus with this weapon using strength or constitution (except expert proficiency is treated as trained).", true));
+        AreaLine = ModManager.RegisterTrait("AreaLine", new TraitProperties("Area (Line)", true, "Weapons with this trait can only fire using the Area Fire action. The DC is equal to 10 + your attack bonus with this weapon using strength or constitution (except expert proficiency is treated as trained).", true));
         Concussive = ModManager.RegisterTrait("Concussive", new TraitProperties("Concussive", true, "Use the weaker of the target’s resistance or immunity\r\nto piercing or to bludgeoning."));
         Area = ModManager.RegisterTrait("Area", new TraitProperties("Area", true, "the effect happens in a targeted area", true));
-        StellarCannonIllustration = new ModdedIllustration(@"StarfinderWeaponsResources\StellarCannon.png");
-        ScattergunIllustration = new ModdedIllustration(@"StarfinderWeaponsResources\Scattergun.png");
-        FlamePistolIllustration = new ModdedIllustration(@"StarfinderWeaponsResources\FlamePistol.png");
+        Automatic = ModManager.RegisterTrait("Automatic", new TraitProperties("Automatic", true, "Can use the 'Automatic Fire' action.The DC is equal to 10 + your attack bonus with this weapon using strength, constitution, or dexterity (except expert proficiency is treated as trained).", true));
+        AutomaticTechnical = ModManager.RegisterTrait("AutomaticTechnical", new TraitProperties("AutomaticTechnical", false));
+        AreaTechnical = ModManager.RegisterTrait("AreaTech", new TraitProperties("AreaTechnical", false));
+        Gun = ModManager.RegisterTrait("Gun", new TraitProperties("Gun", true, "fires projectiles and has a magazine", false));
+        StarfinderGun = ModManager.RegisterTrait("StarfinderGun", new TraitProperties("StarfinderGun", false));
 
+        if (File.Exists(@"..\CustomMods\StarfinderWeaponsResources\StellarCannon.png"))
+        {
+            StellarCannonIllustration = new ModdedIllustration(@"StarfinderWeaponsResources\StellarCannon.png");
+        }
+        if (File.Exists(@"..\CustomMods\StarfinderWeaponsResources\Scattergun.png"))
+        {
+            ScattergunIllustration = new ModdedIllustration(@"StarfinderWeaponsResources\Scattergun.png");
+        }
+        if (File.Exists(@"..\CustomMods\StarfinderWeaponsResources\FlamePistol.png"))
+        {
+            FlamePistolIllustration = new ModdedIllustration(@"StarfinderWeaponsResources\FlamePistol.png");
+        }
+        if (File.Exists(@"..\CustomMods\StarfinderWeaponsResources\Rotolaser.png"))
+        {
+            RotolaserIllustration = new ModdedIllustration(@"StarfinderWeaponsResources\Rotolaser.png");
+        }
+        if (File.Exists(@"..\CustomMods\StarfinderWeaponsResources\LaserPistol.png"))
+        {
+            LaserPistolIllustration = new ModdedIllustration(@"StarfinderWeaponsResources\LaserPistol.png");
+        }
+
+        ModManager.RegisterActionOnEachCreature(ApplyStarfinderGun);
         ModManager.RegisterActionOnEachCreature(ApplyAreaFire);
+        ModManager.RegisterActionOnEachCreature(ApplyAutoFire);
         ModManager.RegisterActionOnEachCreature(GenerateConcussiveEffect);
         ModManager.RegisterNewItemIntoTheShop("StellarCannon0", CreateStellarCannon);
         ModManager.RegisterNewItemIntoTheShop("StellarCannon1", CreateTacticalStellarCannon);
@@ -62,10 +96,105 @@ public class StarfinderWeaponsLoader
         ModManager.RegisterNewItemIntoTheShop("FlamePistol0", CreateFlamePistol);
         ModManager.RegisterNewItemIntoTheShop("FlamePistol1", CreateTacticalFlamePistol);
         ModManager.RegisterNewItemIntoTheShop("FlamePistol2", CreateAdvancedFlamePistol);
+        ModManager.RegisterNewItemIntoTheShop("Rotolaser0", CreateRotolaser);
+        ModManager.RegisterNewItemIntoTheShop("LaserPistol0", CreateLaserPistol);
     }
 
     /// <summary>
-    /// creates the area fire and reload actions for equipped area weapons
+    /// creates the action for equipped starfinder gun items, including reloading, preventing fire if loaded ammo is too low, and reducing ammo when using strikes.
+    /// also renames weapon so it shows current and max ammo
+    /// </summary>
+    private static Action<Creature> ApplyStarfinderGun = (Creature creature) =>
+    {
+        creature.AddQEffect(new QEffect()
+        {
+            StartOfCombat = (qfSelf) =>
+            {
+                Task gunSetupTask = new Task(() =>
+                {
+                    creature = qfSelf.Owner;
+                    var gunItems = creature.HeldItems.FindAll(heldItem => heldItem is GunItem).Cast<GunItem>();
+                    if (gunItems.Count() <= 0)
+                    {
+                        return;
+                    }
+                    foreach (var gunItem in gunItems)
+                    {
+                        SetupGunProperties(qfSelf, gunItem);
+                        ((EphemeralAreaProperties)gunItem.EphemeralItemProperties).CurrentMagazine = gunItem.Capacity;
+                    }
+                });
+                gunSetupTask.Start();
+                return gunSetupTask;
+            },
+            StateCheck = (qfSelf) =>
+            {
+                creature = qfSelf.Owner;
+                var gunItems = creature.HeldItems.FindAll(heldItem => heldItem is GunItem).Cast<GunItem>();
+                if (gunItems.Count() <= 0)
+                {
+                    return;
+                }
+                foreach (var gunItem in gunItems)
+                {
+                    if (gunItem.Traits.Contains(StarfinderGun))
+                    {
+                        SetupGunProperties(qfSelf, gunItem);
+                    }
+                }
+            }
+        });
+    };
+
+    private static void SetupGunProperties(QEffect qfSelf, GunItem gunItem)
+    {
+        if (gunItem.Traits.Contains(StarfinderGun))
+        {
+            string plusOne = string.Empty;
+            string striking = string.Empty;
+            string extraMoniker = string.Empty;
+            int newUsage = gunItem.Usage;
+            int newCapacity = gunItem.Capacity;
+            int newRange = gunItem.WeaponProperties.RangeIncrement;
+            if (gunItem.Traits.Contains(Trait.Weapon))
+            {
+                extraMoniker = ", Commercial";
+                newUsage = gunItem.CommercialUsage;
+                newCapacity = gunItem.CommercialCapacity;
+                newRange = gunItem.CommercialRange;
+            }
+            if (gunItem.Traits.Contains(Trait.Weapon) && gunItem.ItemModifications.Any(imod => imod.Kind == ItemModificationKind.PlusOne))
+            {
+                extraMoniker = ", Tactical";
+                newUsage = gunItem.TacticalUsage;
+                newCapacity = gunItem.TacticalCapacity;
+                newRange = gunItem.TacticalRange;
+            }
+            if (gunItem.Traits.Contains(Trait.Weapon) && gunItem.ItemModifications.Any(imod => imod.Kind == ItemModificationKind.Striking))
+            {
+                extraMoniker = ", Striking";
+                newUsage = gunItem.AdvancedUsage;
+                newCapacity = gunItem.CommercialCapacity;
+                newRange = gunItem.CommercialRange;
+            }
+            if (gunItem.Traits.Contains(Trait.Weapon) && gunItem.ItemModifications.Any(imod => imod.Kind == ItemModificationKind.PlusOneStriking))
+            {
+                extraMoniker = ", Advanced";
+                newUsage = gunItem.AdvancedUsage;
+                newCapacity = gunItem.AdvancedCapacity;
+                newRange = gunItem.AdvancedRange;
+            }
+
+            gunItem.Capacity = newCapacity;
+            gunItem.Usage = newUsage;
+            gunItem.WeaponProperties = gunItem.WeaponProperties.WithRangeIncrement(newRange);
+            gunItem.Name = gunItem.BaseGunItemName + extraMoniker + " [" + ((EphemeralAreaProperties)gunItem.EphemeralItemProperties).CurrentMagazine + "/" + gunItem.Capacity + "]";
+            GenerateStarfinderGunActions(qfSelf.Owner, gunItem);
+        }
+    }
+
+    /// <summary>
+    /// creates the area fire actions for equipped area weapons and stops usage of area fire if too low on loaded ammo
     /// </summary>
     private static Action<Creature> ApplyAreaFire = (creature) =>
     {
@@ -81,7 +210,37 @@ public class StarfinderWeaponsLoader
                 }
                 foreach (var areaItem in areaItems)
                 {
-                    GenerateAreaFireActions(qfSelf.Owner,areaItem);
+                    if (areaItem.Traits.Contains(AreaTechnical))
+                    {
+                        GenerateAreaFireActions(qfSelf.Owner, areaItem);
+                    }
+                }
+            },
+
+        });
+    };
+
+    /// <summary>
+    /// creates the area fire actions for equipped area weapons and stops usage if too low on loaded ammo
+    /// </summary>
+    private static Action<Creature> ApplyAutoFire = (creature) =>
+    {
+        creature.AddQEffect(new QEffect()
+        {
+            StateCheck = (qfSelf) =>
+            {
+                creature = qfSelf.Owner;
+                var areaItems = creature.HeldItems.FindAll(heldItem => heldItem is AreaItem).Cast<AreaItem>();
+                if (areaItems.Count() <= 0)
+                {
+                    return;
+                }
+                foreach (var areaItem in areaItems)
+                {
+                    if (areaItem.Traits.Contains(Automatic))
+                    {
+                        GenerateAutoFireActions(qfSelf.Owner, areaItem);
+                    }
                 }
             },
 
@@ -97,7 +256,7 @@ public class StarfinderWeaponsLoader
         {
             YourStrikeGainsDamageType = (qfSelf, cAction) =>
             {
-                if(cAction.Item?.HasTrait(Concussive) != true)
+                if(cAction.Item?.Traits.Contains(Concussive) != true)
                 {
                     return null;
                 }
@@ -115,6 +274,59 @@ public class StarfinderWeaponsLoader
     };
 
     /// <summary>
+    /// generates the actions needed for starfinder guns
+    /// </summary>
+    /// <param name="itemOwner">gun ownder</param>
+    /// <param name="gunItem">the gun to generate actions for</param>
+    private static void GenerateStarfinderGunActions(Creature itemOwner, GunItem gunItem) 
+    {
+        QEffect starfinderGunEffect = new QEffect(ExpirationCondition.Ephemeral)
+        {
+            AfterYouTakeAction = (qfSelf, combatAction) =>
+            {
+                Task fireTask = new Task(() =>
+                {
+                    if (combatAction.Traits.Contains(Trait.Strike) && combatAction.Item == gunItem)
+                    {
+                        ((EphemeralAreaProperties)gunItem.EphemeralItemProperties).CurrentMagazine -= gunItem.Usage;
+
+                    };
+                });
+                fireTask.Start();
+                return fireTask;
+            },
+            PreventTakingAction = (action) =>
+            {
+                if (action.Item == gunItem)
+                {
+                    if (((EphemeralAreaProperties)gunItem.EphemeralItemProperties).CurrentMagazine < gunItem.Usage)
+                    {
+                        return "Not Enough Ammo Loaded.";
+                    }
+                }
+                return null;
+            }
+        };
+        itemOwner.AddQEffect(starfinderGunEffect);
+
+        if (((EphemeralAreaProperties)gunItem.EphemeralItemProperties).CurrentMagazine < gunItem.Capacity)
+        {
+            QEffect reloadEffect = new QEffect(ExpirationCondition.Ephemeral)
+            {
+                ProvideMainAction = (qfSelf) =>
+                {
+                    CombatAction reloadAction = new CombatAction(itemOwner, gunItem.Illustration, "Reload " + gunItem.Name, new[] { Trait.Interact }, "interact to reload", Target.Self()).WithActionCost(gunItem.Reload)
+                    .WithEffectOnSelf((self) => ((EphemeralAreaProperties)gunItem.EphemeralItemProperties).CurrentMagazine = gunItem.Capacity);
+
+                    return new ActionPossibility(reloadAction);
+                },
+            };
+
+            itemOwner.AddQEffect(reloadEffect);
+        }
+    }
+
+    /// <summary>
     /// creates the actions to give the creature for the given area weapon
     /// </summary>
     /// <param name="itemOwner">the wielder of the weapon</param>
@@ -129,14 +341,17 @@ public class StarfinderWeaponsLoader
         {
             case AreaItem.AreaTypes.Burst:
                 areaType = "burst";
+                effectRange = areaItem.AreaRange;
                 target = Target.Burst(areaItem.WeaponProperties.RangeIncrement, effectRange);
                 break;
             case AreaItem.AreaTypes.Cone:
                 areaType = "cone";
+                effectRange = areaItem.WeaponProperties.RangeIncrement;
                 target = Target.Cone(areaItem.WeaponProperties.RangeIncrement);
                 break;
             case AreaItem.AreaTypes.Line:
                 areaType = "line";
+                effectRange = areaItem.WeaponProperties.RangeIncrement;
                 target = Target.Line(areaItem.WeaponProperties.RangeIncrement);
                 break;
         }
@@ -147,10 +362,9 @@ public class StarfinderWeaponsLoader
         {
             PreventTakingAction = (action) =>
             {
-                if(action.Item is AreaItem)
+                if (action.Item == areaItem)
                 {
-                    AreaItem aItem = (AreaItem)action.Item;
-                    if(((EphemeralAreaProperties)aItem.EphemeralItemProperties).CurrentMagazine < aItem.Usage)
+                    if (((EphemeralAreaProperties)areaItem.EphemeralItemProperties).CurrentMagazine < areaItem.Usage)
                     {
                         return "Not Enough Ammo Loaded.";
                     }
@@ -160,33 +374,17 @@ public class StarfinderWeaponsLoader
             ProvideMainAction = (qfSelf) =>
             {
                 var weaponOwner = qfSelf.Owner;
-                var martialTraining = weaponOwner.Proficiencies.Get(Trait.Martial);
-                var simpleTraining = weaponOwner.Proficiencies.Get(Trait.Simple);
-                var trainedBonus = weaponOwner.Level;
-
-                if (areaItem.Traits.Contains(Trait.Martial))
-                {
-                    //+4 is too good to add for an area reflex save, so nerfing fighters here.
-                    //This is closer to how starfinder does it since that uses class DC, and nothing will have higher than trained at the first 4 levels... but I wanted weapon training and ability mod to matter
-                    trainedBonus = martialTraining == Proficiency.Untrained ? 0 : weaponOwner.Level + 2;
-                }
-                if (areaItem.Traits.Contains(Trait.Simple))
-                {
-                    //+4 is too good to add for an area reflex save, so nerfing fighters here.
-                    //This is closer to how starfinder does it since that uses class DC, and nothing will have higher than trained at the first 4 levels... but I wanted weapon training and ability mod to matter
-                    trainedBonus = simpleTraining == Proficiency.Untrained ? 0 : weaponOwner.Level + 2;
-                }
 
                 areaFireAction = new CombatAction(weaponOwner, IllustrationName.BurningJet,
-                    areaItem.Name + " Area Fire[" + ((EphemeralAreaProperties)areaItem.EphemeralItemProperties).CurrentMagazine + "/" + areaItem.Capacity + "]",
+                    areaItem.Name + " Area Fire",
                     new[] { Area, Trait.Attack },
-                    "DC " + (trainedBonus + Math.Max(weaponOwner.Abilities.Strength, weaponOwner.Abilities.Constitution) + 10 + areaItem.WeaponProperties.ItemBonus) + " Basic Reflex. " +
+                    "DC " + GetBestAreaDC(weaponOwner, areaItem) + " Basic Reflex. " +
                      "use an area fire weapon to attack in a " + effectRange * 5 + " ft. " + areaType + " for " + areaItem.WeaponProperties.Damage + " " + areaItem.WeaponProperties.DamageKind.ToString() + " damage.", target)
                     { Item = areaItem}
                     .WithActionCost(2)
                     .WithSavingThrow(new SavingThrow(Defense.Reflex, (creature) =>
                     {
-                        return trainedBonus + Math.Max(creature.Abilities.Strength, creature.Abilities.Constitution) + 10 + areaItem.WeaponProperties.ItemBonus;
+                        return GetBestAreaDC(creature, areaItem);
                     }
                     ))
                     .WithEffectOnSelf((self) => ((EphemeralAreaProperties)areaItem.EphemeralItemProperties).CurrentMagazine -= areaItem.Usage)
@@ -195,15 +393,15 @@ public class StarfinderWeaponsLoader
                         DamageKind kind = areaItem.WeaponProperties.DamageKind;
                         if (areaItem.Traits.Contains(Concussive))
                         {
-                            kind = getBetterDamageKindAgainst(target, DamageKind.Piercing, DamageKind.Bludgeoning);
+                            kind = target.WeaknessAndResistance.WhatDamageKindIsBestAgainstMe(new List<DamageKind>(){ DamageKind.Piercing, DamageKind.Bludgeoning});
                         }
                         if (areaItem.Traits.Contains(Trait.VersatileP))
                         {
-                            kind = getBetterDamageKindAgainst(target, kind, DamageKind.Piercing);
+                            kind = target.WeaknessAndResistance.WhatDamageKindIsBestAgainstMe(new List<DamageKind>() { kind, DamageKind.Piercing });
                         }
                         if(areaItem.Traits.Contains(Trait.VersatileS))
                         {
-                            kind = getBetterDamageKindAgainst(target, kind, DamageKind.Slashing);
+                            kind = target.WeaknessAndResistance.WhatDamageKindIsBestAgainstMe(new List<DamageKind>() { kind, DamageKind.Slashing });
                         }
 
                         await CommonSpellEffects.DealBasicDamage(action, user, target, result, areaItem.WeaponProperties.Damage, kind);
@@ -214,311 +412,134 @@ public class StarfinderWeaponsLoader
             }
         };
         itemOwner.AddQEffect(areaFireEffect);
+    }
 
-        if (((EphemeralAreaProperties)areaItem.EphemeralItemProperties).CurrentMagazine < areaItem.Capacity)
+    /// <summary>
+    /// adds actions for auto fire guns
+    /// </summary>
+    /// <param name="itemOwner">item owner</param>
+    /// <param name="areaItem">the item to generate actions for</param>
+    private static void GenerateAutoFireActions(Creature itemOwner, AreaItem areaItem)
+    {
+        int effectRange = areaItem.WeaponProperties.RangeIncrement/2;
+
+        CombatAction autoFireAction = null;
+
+        QEffect autoFireEffect = new QEffect(ExpirationCondition.Ephemeral)
         {
-            QEffect reloadEffect = new QEffect(ExpirationCondition.Ephemeral)
+            PreventTakingAction = (action) =>
             {
-                ProvideMainAction = (qfSelf) =>
+                if (action.Item == areaItem && ((EphemeralAreaProperties)areaItem.EphemeralItemProperties).CurrentMagazine < areaItem.Capacity / 2 && action.Traits.Contains(AutomaticTechnical))
                 {
-                    CombatAction reloadAction = new CombatAction(itemOwner, areaItem.Illustration, "Reload " + areaItem.Name, new[] { Trait.Interact }, "interact to reload", Target.Self()).WithActionCost(areaItem.Reload)
-                    .WithEffectOnSelf((self) => ((EphemeralAreaProperties)areaItem.EphemeralItemProperties).CurrentMagazine = areaItem.Capacity);
+                    return "You need half your magazine loaded to autofire";
+                }
+                return null;
+            },
 
-                    return new ActionPossibility(reloadAction);
-                },
-            };
+            ProvideActionIntoPossibilitySection = (qfSelf, posSelection) =>
+            {
+                if (posSelection.Possibilities.Any(p => p is ActionPossibility && ((ActionPossibility)p)?.CombatAction.Item != null && ((ActionPossibility)p).CombatAction.Item == areaItem && ((ActionPossibility)p).CombatAction.Traits.Contains(Trait.Strike)))
+                {
+                    var weaponOwner = qfSelf.Owner;
 
-            itemOwner.AddQEffect(reloadEffect);
+                    autoFireAction = new CombatAction(weaponOwner, IllustrationName.HailOfSplinters,
+                        areaItem.Name + " Automatic Fire",
+                        new[] { Area, Trait.Attack, AutomaticTechnical },
+                        "DC " + GetBestAreaDC(weaponOwner, areaItem, true) + " Basic Reflex. " +
+                         "use an automatic fire weapon to attack in a " + effectRange * 5 + " ft. cone for " + areaItem.WeaponProperties.Damage + " " + areaItem.WeaponProperties.DamageKind.ToString() + " damage.", Target.Cone(effectRange))
+                    { Item = areaItem }
+                        .WithActionCost(2)
+                        .WithSavingThrow(new SavingThrow(Defense.Reflex, (creature) =>
+                        {
+                            return GetBestAreaDC(creature, areaItem, true);
+                        }
+                        ))
+                        .WithEffectOnSelf((self) => ((EphemeralAreaProperties)areaItem.EphemeralItemProperties).CurrentMagazine -= areaItem.Capacity / 2)
+                        .WithEffectOnEachTarget(async (action, user, target, result) =>
+                        {
+                            DamageKind kind = areaItem.WeaponProperties.DamageKind;
+                            if (areaItem.Traits.Contains(Concussive))
+                            {
+                                kind = target.WeaknessAndResistance.WhatDamageKindIsBestAgainstMe(new List<DamageKind>() { DamageKind.Piercing, DamageKind.Bludgeoning });
+                            }
+                            if (areaItem.Traits.Contains(Trait.VersatileP))
+                            {
+                                kind = target.WeaknessAndResistance.WhatDamageKindIsBestAgainstMe(new List<DamageKind>() { kind, DamageKind.Piercing });
+                            }
+                            if (areaItem.Traits.Contains(Trait.VersatileS))
+                            {
+                                kind = target.WeaknessAndResistance.WhatDamageKindIsBestAgainstMe(new List<DamageKind>() { kind, DamageKind.Slashing });
+                            }
+
+                            await CommonSpellEffects.DealBasicDamage(action, user, target, result, areaItem.WeaponProperties.Damage, kind);
+                            //only level 4 means no critical specialization effects, yay!
+                        });
+
+                    return new ActionPossibility(autoFireAction);
+                }
+                return null;
+            }
+        };
+        itemOwner.AddQEffect(autoFireEffect);
+    }
+
+
+
+    /// <summary>
+    /// determines the str and con (sometimes dex) DCs for the given item held by the given creature with the given trained bonus taking bonuses and penalties into account
+    /// </summary>
+    /// <param name="creature">creature wielding the area item</param>
+    /// <param name="item">the area item being wiedlded</param>
+    /// <param name="isAutoFire">Determine if the DC being figured out is autofire or not, as that allows dexterity bonus</param>
+    /// <returns>the final best DC</returns>
+    private static int GetBestAreaDC(Creature creature, AreaItem item, bool isAutoFire = false)
+    {
+        var martialTraining = creature.Proficiencies.Get(Trait.Martial);
+        var simpleTraining = creature.Proficiencies.Get(Trait.Simple);
+        var trainedBonus = creature.Level;
+
+        if (item.Traits.Contains(Trait.Martial))
+        {
+            //+4 is too good to add for an area reflex save, so nerfing fighters here.
+            //This is closer to how starfinder does it since that uses class DC, and nothing will have higher than trained at the first 4 levels... but I wanted weapon training and ability mod to matter
+            trainedBonus = martialTraining == Proficiency.Untrained ? 0 : creature.Level + 2;
         }
-    }
-
-    /// <summary>
-    /// finds the better damage type to use against the target
-    /// </summary>
-    /// <param name="target">the target to check against</param>
-    /// <param name="kindA">the first damage kind</param>
-    /// <param name="kindB">the second damage kind</param>
-    /// <returns>the better damage type. If it is the same for both damage kinds, kindA is returned.</returns>
-    private static DamageKind getBetterDamageKindAgainst(Creature target, DamageKind kindA, DamageKind kindB)
-    {
-        if(target.WeaknessAndResistance.Immunities.Contains(kindB))
+        if (item.Traits.Contains(Trait.Simple))
         {
-            return kindA;
-        }
-        if (target.WeaknessAndResistance.Immunities.Contains(kindA))
-        {
-            return kindB;
+            //+4 is too good to add for an area reflex save, so nerfing fighters here.
+            //This is closer to how starfinder does it since that uses class DC, and nothing will have higher than trained at the first 4 levels... but I wanted weapon training and ability mod to matter
+            trainedBonus = simpleTraining == Proficiency.Untrained ? 0 : creature.Level + 2;
         }
 
-        Resistance resistanceA = target.WeaknessAndResistance.Resistances.FirstOrDefault(res => res.DamageKind == kindA,new Resistance(kindA,0,false));
-        Resistance resistanceB = target.WeaknessAndResistance.Resistances.FirstOrDefault(res => res.DamageKind == kindB, new Resistance(kindB, 0, false));
-
-        int resistValueA = resistanceA.Value * (resistanceA.IsWeakness ? -1 : 1);
-        int resistValueB = resistanceB.Value * (resistanceB.IsWeakness ? -1 : 1);
-
-        return resistValueB < resistValueA ? kindB : kindA;
-    }
-
-    /// <summary>
-    /// creates the base stellar cannon
-    /// </summary>
-    /// <param name="iName">input from the game</param>
-    /// <returns>the stellar cannon item</returns>
-    private static Item CreateStellarCannon(ItemName iName)
-    {
-        AreaItem stellarCannon = new AreaItem(iName, IllustrationName.FireRay, "Stellar Cannon, Commercial", 0, 4, new[] { Analogue, Unwieldy, Trait.Ranged, Trait.TwoHanded, AreaBurst10ft, Trait.Martial})
+        var conBonuses = new List<Bonus>();
+        var strBonuses = new List<Bonus>();
+        var dexBonuses = new List<Bonus>();
+        foreach (var qEffect in creature.QEffects)
         {
-            MainTrait = AreaBurst10ft,
-            WeaponProperties = new WeaponProperties("1d10", DamageKind.Piercing) { ItemBonus = 0 }.WithRangeIncrement(10),
-            Reload = 1,
-            Capacity = 8,
-            Usage = 2,
-            AreaType = AreaItem.AreaTypes.Burst,
-            AreaRange = 2,
-            EphemeralItemProperties = new EphemeralAreaProperties() { CurrentMagazine = 8},
-        };
+            conBonuses.Add(qEffect.BonusToAllChecksAndDCs?.Invoke(qEffect));
+            strBonuses.Add(qEffect.BonusToAllChecksAndDCs?.Invoke(qEffect));
+            conBonuses.Add(qEffect.BonusToAbilityBasedChecksRollsAndDCs?.Invoke(qEffect, Ability.Constitution));
+            strBonuses.Add(qEffect.BonusToAbilityBasedChecksRollsAndDCs?.Invoke(qEffect, Ability.Strength));
+            if(isAutoFire)
+            {
+                dexBonuses.Add(qEffect.BonusToAllChecksAndDCs?.Invoke(qEffect));
+                dexBonuses.Add(qEffect.BonusToAbilityBasedChecksRollsAndDCs?.Invoke(qEffect, Ability.Dexterity));
+            }
+        }
 
-        stellarCannon.Illustration = StellarCannonIllustration;
-        return stellarCannon;
-    }
+        var (strBonusTotal, _) = Bonus.CalculateBest(strBonuses, false);
+        var (conBonusTotal, _) = Bonus.CalculateBest(conBonuses, false);
+        var (dexBonusTotal, _) = Bonus.CalculateBest(dexBonuses, false);
 
-    /// <summary>
-    /// creates the tactical stellar cannnon
-    /// </summary>
-    /// <param name="iName">input from the game</param>
-    /// <returns>the stellar cannon item</returns>
-    private static Item CreateTacticalStellarCannon(ItemName iName)
-    {
-        AreaItem stellarCannon = new AreaItem(iName, IllustrationName.FireRay, "Stellar Cannon, Tactical", 0, 39, new[] { Analogue, Unwieldy, Trait.Ranged, Trait.TwoHanded, AreaBurst10ft, Trait.Martial })
+        var strDC = trainedBonus + creature.Abilities.Strength + item.WeaponProperties.ItemBonus + 10 + strBonusTotal;
+        var conDC = trainedBonus + creature.Abilities.Constitution + item.WeaponProperties.ItemBonus + 10 + conBonusTotal;
+        var dexDC = trainedBonus + creature.Abilities.Dexterity + item.WeaponProperties.ItemBonus + 10 + dexBonusTotal;
+
+        var bestDC = Math.Max(strDC, conDC);
+        if(isAutoFire)
         {
-            MainTrait = AreaBurst10ft,
-            WeaponProperties = new WeaponProperties("1d10", DamageKind.Piercing) { ItemBonus = 1 }.WithRangeIncrement(10),
-            Reload = 1,
-            Capacity = 12,
-            Usage = 2,
-            AreaType = AreaItem.AreaTypes.Burst,
-            AreaRange = 2,
-            EphemeralItemProperties = new EphemeralAreaProperties() { CurrentMagazine = 12 },
-        };
-
-        stellarCannon.Illustration = StellarCannonIllustration;
-        return stellarCannon;
+            return Math.Max(bestDC, dexDC);
+        }
+        return bestDC;
     }
-
-    /// <summary>
-    /// creates the advanced stellar cannnon
-    /// </summary>
-    /// <param name="iName">input from the game</param>
-    /// <returns>the stellar cannon item</returns>
-    private static Item CreateAdvancedStellarCannon(ItemName iName)
-    {
-        AreaItem stellarCannon = new AreaItem(iName, IllustrationName.FireRay, "Stellar Cannon, Advanced", 0,104, new[] { Analogue, Unwieldy, Trait.Ranged, Trait.TwoHanded, AreaBurst10ft, Trait.Martial })
-        {
-            MainTrait = AreaBurst10ft,
-            WeaponProperties = new WeaponProperties("2d10", DamageKind.Piercing) { ItemBonus = 1 }.WithRangeIncrement(10),
-            Reload = 1,
-            Capacity = 16,
-            Usage = 4,
-            AreaType = AreaItem.AreaTypes.Burst,
-            AreaRange = 2,
-            EphemeralItemProperties = new EphemeralAreaProperties() { CurrentMagazine = 16 },
-        };
-
-        stellarCannon.Illustration = StellarCannonIllustration;
-        return stellarCannon;
-    }
-
-    /// <summary>
-    /// creates the base scattergun
-    /// </summary>
-    /// <param name="iName">input from the game</param>
-    /// <returns>the scattergun item</returns>
-    private static Item CreateScattergun(ItemName iName)
-    {
-        AreaItem scattergun = new AreaItem(iName, IllustrationName.BurningHands, "Scattergun, Commercial", 0, 4, new[] { Analogue, Unwieldy, Trait.Ranged, Trait.TwoHanded, AreaCone, Trait.Simple, Concussive })
-        {
-            MainTrait = AreaCone,
-            WeaponProperties = new WeaponProperties("1d6", DamageKind.Piercing) { ItemBonus = 0 }.WithRangeIncrement(3),
-            Reload = 1,
-            Capacity = 4,
-            Usage = 1,
-            AreaType = AreaItem.AreaTypes.Cone,
-            AreaRange = 3,
-            EphemeralItemProperties = new EphemeralAreaProperties() { CurrentMagazine = 4 },
-        };
-
-        scattergun.Illustration = ScattergunIllustration;
-        return scattergun;
-    }
-
-    /// <summary>
-    /// creates the tactical scattergun
-    /// </summary>
-    /// <param name="iName">input from the game</param>
-    /// <returns>the scattergun item</returns>
-    private static Item CreateTacticalScattergun(ItemName iName)
-    {
-        AreaItem scattergun = new AreaItem(iName, IllustrationName.BurningHands, "Scattergun, Tactical", 0, 39, new[] { Analogue, Unwieldy, Trait.Ranged, Trait.TwoHanded, AreaCone, Trait.Simple, Concussive })
-        {
-            MainTrait = AreaCone,
-            WeaponProperties = new WeaponProperties("1d6", DamageKind.Piercing) { ItemBonus = 1 }.WithRangeIncrement(3),
-            Reload = 1,
-            Capacity = 6,
-            Usage = 1,
-            AreaType = AreaItem.AreaTypes.Cone,
-            AreaRange = 3,
-            EphemeralItemProperties = new EphemeralAreaProperties() { CurrentMagazine = 6 },
-        };
-
-        scattergun.Illustration = ScattergunIllustration;
-        return scattergun;
-    }
-
-    /// <summary>
-    /// creates the advanced scattergun
-    /// </summary>
-    /// <param name="iName">input from the game</param>
-    /// <returns>the scattergun item</returns>
-    private static Item CreateAdvancedScattergun(ItemName iName)
-    {
-        AreaItem scattergun = new AreaItem(iName, IllustrationName.BurningHands, "Scattergun, Advanced", 0, 104, new[] { Analogue, Unwieldy, Trait.Ranged, Trait.TwoHanded, AreaCone, Trait.Simple, Concussive })
-        {
-            MainTrait = AreaCone,
-            WeaponProperties = new WeaponProperties("2d6", DamageKind.Piercing) { ItemBonus = 1 }.WithRangeIncrement(3),
-            Reload = 1,
-            Capacity = 8,
-            Usage = 2,
-            AreaType = AreaItem.AreaTypes.Cone,
-            AreaRange = 3,
-            EphemeralItemProperties = new EphemeralAreaProperties() { CurrentMagazine = 8 },
-        };
-
-        scattergun.Illustration = ScattergunIllustration;
-        return scattergun;
-    }
-
-    /// <summary>
-    /// creates the base flame pistol
-    /// </summary>
-    /// <param name="iName">input from the game</param>
-    /// <returns>the flame pistol item</returns>
-    private static Item CreateFlamePistol(ItemName iName)
-    {
-        AreaItem flamePistol = new AreaItem(iName, IllustrationName.BurningHands, "Flame Pistol, Commercial", 0, 2, new[] { Analogue, Unwieldy, Trait.Ranged, AreaLine, Trait.Simple })
-        {
-            MainTrait = AreaCone,
-            WeaponProperties = new WeaponProperties("1d6", DamageKind.Fire) { ItemBonus = 0 }.WithRangeIncrement(3),
-            Reload = 1,
-            Capacity = 2,
-            Usage = 1,
-            AreaType = AreaItem.AreaTypes.Line,
-            AreaRange = 3,
-            EphemeralItemProperties = new EphemeralAreaProperties() { CurrentMagazine = 2 },
-        };
-
-        flamePistol.Illustration = FlamePistolIllustration;
-        return flamePistol;
-    }
-
-    /// <summary>
-    /// creates the tactical flame pistol
-    /// </summary>
-    /// <param name="iName">input from the game</param>
-    /// <returns>the flame pistol item</returns>
-    private static Item CreateTacticalFlamePistol(ItemName iName)
-    {
-        AreaItem flamePistol = new AreaItem(iName, IllustrationName.BurningHands, "Flame Pistol, Tactical", 0, 37, new[] { Analogue, Unwieldy, Trait.Ranged, AreaLine, Trait.Simple })
-        {
-            MainTrait = AreaCone,
-            WeaponProperties = new WeaponProperties("1d6", DamageKind.Fire) { ItemBonus = 1 }.WithRangeIncrement(3),
-            Reload = 1,
-            Capacity = 3,
-            Usage = 1,
-            AreaType = AreaItem.AreaTypes.Line,
-            AreaRange = 3,
-            EphemeralItemProperties = new EphemeralAreaProperties() { CurrentMagazine = 3 },
-        };
-
-        flamePistol.Illustration = FlamePistolIllustration;
-        return flamePistol;
-    }
-
-    /// <summary>
-    /// creates the advanced flame pistol
-    /// </summary>
-    /// <param name="iName">input from the game</param>
-    /// <returns>the flame pistol item</returns>
-    private static Item CreateAdvancedFlamePistol(ItemName iName)
-    {
-        AreaItem flamePistol = new AreaItem(iName, IllustrationName.BurningHands, "Flame Pistol, Advanced", 0, 102, new[] { Analogue, Unwieldy, Trait.Ranged, AreaLine, Trait.Simple })
-        {
-            MainTrait = AreaCone,
-            WeaponProperties = new WeaponProperties("2d6", DamageKind.Fire) { ItemBonus = 1 }.WithRangeIncrement(3),
-            Reload = 1,
-            Capacity = 4,
-            Usage = 2,
-            AreaType = AreaItem.AreaTypes.Line,
-            AreaRange = 3,
-            EphemeralItemProperties = new EphemeralAreaProperties() { CurrentMagazine = 4 },
-        };
-
-        flamePistol.Illustration = FlamePistolIllustration;
-        return flamePistol;
-    }
-}
-
-/// <summary>
-/// stores ephemeral properties for area weapons
-/// </summary>
-public class EphemeralAreaProperties : EphemeralItemProperties
-{
-    public int CurrentMagazine
-    {
-        get; set;
-    }
-}
-
-/// <summary>
-/// stores properties for area items
-/// </summary>
-public class AreaItem : Item
-{
-    public enum AreaTypes
-    {
-        Burst,
-        Cone,
-        Line
-    }
-    public AreaItem(IllustrationName illustration, string name, params Trait[] traits) : base(illustration, name, traits)
-    {
-
-    }
-
-    public AreaItem(ItemName itemName, IllustrationName illustration, string name, int level, int price, params Trait[] traits) : base(itemName, illustration, name, level, price, traits)
-    {
-    }
-    public int Usage
-    {
-        get; set;
-    } = 1;
-    public int Capacity
-    {
-        get; set;
-    } = 5;
-    public int Reload
-    {
-        get; set;
-    } = 1;
-    public AreaTypes AreaType 
-    { 
-        get; set; 
-    } = AreaTypes.Burst;
-    public int AreaRange
-    {
-        get; set;
-    } = 1;
-    public int Tracking
-    {
-        get; set;
-    } = 0;
 }

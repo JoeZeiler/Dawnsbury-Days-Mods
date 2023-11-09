@@ -7,6 +7,12 @@
     <None Update="StarfinderWeaponsResources\FlamePistol.png">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
+    <None Update="StarfinderWeaponsResources\LaserPistol.png">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Update="StarfinderWeaponsResources\Rotolaser.png">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
     <None Update="StarfinderWeaponsResources\Scattergun.png">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
