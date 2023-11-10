@@ -13,6 +13,7 @@ using System;
 using System.IO;
 using System.Collections.Generic;
 using Microsoft.Xna.Framework;
+using Dawnsbury.Core;
 
 namespace Dawnsbury.Mods.Feats.General.BonMot;
 
@@ -26,6 +27,9 @@ public class BonMotLoader
     public const string defaultRetort = "How appropriate, you fight like a cow!";
     public const string defaultCritInsult = "I will milk every drop of blood from your body!";
     private const string logDialogFormat = "{0} says, \"{1}\"";
+    private static ModdedIllustration DairyBottleIllustration;
+    private static ModdedIllustration GuybrushIllustration;
+    private static ModdedIllustration CaptainSmirkIllustration;
 
     /// <summary>
     /// here to add the linguistic trait
@@ -34,6 +38,9 @@ public class BonMotLoader
     [DawnsburyDaysModMainMethod]
     public static void LoadMod()
     {
+        DairyBottleIllustration = File.Exists(@"..\CustomMods\BonMotResources\DairyBottle.png") ? new ModdedIllustration(@"BonMotResources\DairyBottle.png") : null;
+        GuybrushIllustration = File.Exists(@"..\CustomMods\BonMotResources\GuybrushWithSword.png") ? new ModdedIllustration(@"BonMotResources\GuybrushWithSword.png") : null;
+        CaptainSmirkIllustration = File.Exists(@"..\CustomMods\BonMotResources\CaptainSmirk.png") ? new ModdedIllustration(@"BonMotResources\CaptainSmirk.png") : null;
         List<Tuple<string, string, string>> insultDirectory = LoadInsultDirectory();
         //registering the linguistic trait so we can add it to Bon Mot
         Linguistic = ModManager.RegisterTrait(
@@ -124,7 +131,7 @@ public class BonMotLoader
                         }
 
                         var dude = qfself.Owner;
-                        CombatAction bonmotAction = new CombatAction(dude, new ModdedIllustration(@"BonMotResources\CaptainSmirk.png"), "Bon Mot", new Trait[] { Trait.Auditory, Trait.Concentrate, Trait.Emotion, Trait.General, Trait.Mental, Trait.Skill, Linguistic },
+                        CombatAction bonmotAction = new CombatAction(dude, CaptainSmirkIllustration!=null?CaptainSmirkIllustration:IllustrationName.QuestionMark, "Bon Mot", new Trait[] { Trait.Auditory, Trait.Concentrate, Trait.Emotion, Trait.General, Trait.Mental, Trait.Skill, Linguistic },
                             "Choose a foe within 30 feet and roll a Diplomacy check against the target's Will DC.\n\nCritical Success: The target is distracted and takes a –3 status penalty to Perception and Will saves for 1 minute. " +
                             "The target can end the effect early with a retort to your Bon Mot. This can either be a single action that has the concentrate trait or an appropriate skill action to frame their retort. " +
                             "\r\nSuccess: As critical success, but the penalty is –2." +
@@ -143,10 +150,10 @@ public class BonMotLoader
                                 string critInsult = insultDirectory[insultID].Item3;
                                 string insultRetort = insultDirectory[insultID].Item2;
 
-                                var dairyBottle = new ModdedIllustration(@"BonMotResources\DairyBottle.png");
+                                
                                 if (result == CheckResult.CriticalSuccess)
                                 {
-                                    QEffect bonMotCritEffect = new QEffect("Bon Mot Crit Success", "-3 status penalty to Perception and Will saves", ExpirationCondition.CountsDownAtEndOfYourTurn, caster, dairyBottle)
+                                    QEffect bonMotCritEffect = new QEffect("Bon Mot Crit Success", "-3 status penalty to Perception and Will saves", ExpirationCondition.CountsDownAtEndOfYourTurn, caster, DairyBottleIllustration != null? DairyBottleIllustration:IllustrationName.QuestionMark)
                                     {
                                         BonusToDefenses = (qfSelf, incomingEffect, targetedDefense) =>
                                         {
@@ -170,7 +177,7 @@ public class BonMotLoader
                                             
                                             //retort removes bon mot debuff with an action, but only if the bon mot creature is within 30 feet, can be seen by the retort user. AI also prioritizes attacking at least once.
                                             return new ActionPossibility(
-                                                    new CombatAction(targetDude, new ModdedIllustration(@"BonMotResources\GuybrushWithSword.png"), "Retort", new Trait[] { Trait.Auditory, Trait.Concentrate, Trait.Mental, Linguistic },
+                                                    new CombatAction(targetDude, GuybrushIllustration != null?GuybrushIllustration:IllustrationName.QuestionMark, "Retort", new Trait[] { Trait.Auditory, Trait.Concentrate, Trait.Mental, Linguistic },
                                                     "retort to get rid of a Bon Mot debuff", Target.Self((innerSelf, ai) => (ai.Tactic == Tactic.Standard && (innerSelf.Actions.AttackedThisTurn.Any() || (innerSelf.Spellcasting != null)) && innerSelf.DistanceTo(caster) <= 6 && innerSelf.CanSee(caster))
                                                     ? AIConstants.EXTREMELY_PREFERRED : AIConstants.NEVER))
                                                     .WithActionCost(1)
@@ -191,7 +198,8 @@ public class BonMotLoader
                                 }
                                 else if (result == CheckResult.Success)
                                 {
-                                    QEffect bonMotSuccessEffect = new QEffect("Bon Mot Success", "-2 status penalty to Perception and Will saves", ExpirationCondition.CountsDownAtEndOfYourTurn, caster, dairyBottle)
+                                    
+                                    QEffect bonMotSuccessEffect = new QEffect("Bon Mot Success", "-2 status penalty to Perception and Will saves", ExpirationCondition.CountsDownAtEndOfYourTurn, caster, DairyBottleIllustration != null ? DairyBottleIllustration : IllustrationName.QuestionMark)
                                     {
                                         BonusToDefenses = (qfSelf, incomingEffect, targetedDefense) =>
                                         {
@@ -215,7 +223,7 @@ public class BonMotLoader
 
                                             //retort removes bon mot debuff with an action, but only if the bon mot creature is within 30 feet, can be seen by the retort user. AI also prioritizes attacking at least once unless they can cast spells.
                                             return new ActionPossibility(
-                                                    new CombatAction(targetDude, new ModdedIllustration(@"BonMotResources\GuybrushWithSword.png"), "Retort", new Trait[] { Trait.Auditory, Trait.Concentrate, Trait.Mental, Linguistic },
+                                                    new CombatAction(targetDude, GuybrushIllustration != null ? GuybrushIllustration : IllustrationName.QuestionMark, "Retort", new Trait[] { Trait.Auditory, Trait.Concentrate, Trait.Mental, Linguistic },
                                                     "retort to get rid of a Bon Mot debuff", Target.Self((innerSelf, ai) => (ai.Tactic == Tactic.Standard && (innerSelf.Actions.AttackedThisTurn.Any() || (innerSelf.Spellcasting != null)) && innerSelf.DistanceTo(caster) <= 6 && innerSelf.CanSee(caster))
                                                     ? AIConstants.EXTREMELY_PREFERRED : AIConstants.NEVER))
                                                     .WithActionCost(1)
@@ -245,7 +253,7 @@ public class BonMotLoader
                                 {
                                     int failNum = rand.Next(0, 2);
                                     string failString = terribleInsults[failNum];
-                                    caster.AddQEffect(new QEffect("Bon Mot Critical Failure", "-2 status penalty to Perception and Will saves", ExpirationCondition.CountsDownAtEndOfYourTurn, caster, dairyBottle)
+                                    caster.AddQEffect(new QEffect("Bon Mot Critical Failure", "-2 status penalty to Perception and Will saves", ExpirationCondition.CountsDownAtEndOfYourTurn, caster, DairyBottleIllustration != null ? DairyBottleIllustration : IllustrationName.QuestionMark)
                                     {
                                         BonusToDefenses = (qfSelf, incomingEffect, targetedDefense) =>
                                         {
