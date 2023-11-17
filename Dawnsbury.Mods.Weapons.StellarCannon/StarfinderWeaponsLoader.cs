@@ -23,19 +23,20 @@ namespace Dawnsbury.Mods.Weapons.StarfinderWeapons;
 /// </summary>
 public partial class StarfinderWeaponsLoader
 {
-    private static Trait Analogue;
-    private static Trait Tech;
-    private static Trait Unwieldy;
-    private static Trait AreaBurst10ft;
-    private static Trait Area;
-    private static Trait AreaCone;
-    private static Trait AreaLine;
-    private static Trait Concussive;
-    private static Trait Automatic;
-    private static Trait AutomaticTechnical;
-    private static Trait AreaTechnical;
-    private static Trait Gun;
-    private static Trait StarfinderGun;
+    public static Trait Analogue;
+    public static Trait Tech;
+    public static Trait Unwieldy;
+    public static Trait AreaBurst10ft;
+    public static Trait AreaBurstTechincal;
+    public static Trait Area;
+    public static Trait AreaCone;
+    public static Trait AreaLine;
+    public static Trait Concussive;
+    public static Trait Automatic;
+    public static Trait AutomaticTechnical;
+    public static Trait AreaTechnical;
+    public static Trait Gun;
+    public static Trait StarfinderGun;
     private static ModdedIllustration StellarCannonIllustration = null;
     private static ModdedIllustration ScattergunIllustration = null;
     private static ModdedIllustration FlamePistolIllustration = null;
@@ -377,7 +378,7 @@ public partial class StarfinderWeaponsLoader
 
                 areaFireAction = new CombatAction(weaponOwner, IllustrationName.BurningJet,
                     areaItem.Name + " Area Fire",
-                    new[] { Area, Trait.Attack },
+                    new[] { Area, Trait.Attack, Trait.Ranged },
                     "DC " + GetBestAreaDC(weaponOwner, areaItem) + " Basic Reflex. " +
                      "use an area fire weapon to attack in a " + effectRange * 5 + " ft. " + areaType + " for " + areaItem.WeaponProperties.Damage + " " + areaItem.WeaponProperties.DamageKind.ToString() + " damage.", target)
                     { Item = areaItem}
@@ -444,7 +445,7 @@ public partial class StarfinderWeaponsLoader
 
                     autoFireAction = new CombatAction(weaponOwner, IllustrationName.HailOfSplinters,
                         areaItem.Name + " Automatic Fire",
-                        new[] { Area, Trait.Attack, AutomaticTechnical },
+                        new[] { Area, Trait.Attack, AutomaticTechnical, Trait.Ranged },
                         "DC " + GetBestAreaDC(weaponOwner, areaItem, true) + " Basic Reflex. " +
                          "use an automatic fire weapon to attack in a " + effectRange * 5 + " ft. cone for " + areaItem.WeaponProperties.Damage + " " + areaItem.WeaponProperties.DamageKind.ToString() + " damage.", Target.Cone(effectRange))
                     { Item = areaItem }
@@ -492,7 +493,7 @@ public partial class StarfinderWeaponsLoader
     /// <param name="item">the area item being wiedlded</param>
     /// <param name="isAutoFire">Determine if the DC being figured out is autofire or not, as that allows dexterity bonus</param>
     /// <returns>the final best DC</returns>
-    private static int GetBestAreaDC(Creature creature, AreaItem item, bool isAutoFire = false)
+    public static int GetBestAreaDC(Creature creature, AreaItem item, bool isAutoFire = false)
     {
         var martialTraining = creature.Proficiencies.Get(Trait.Martial);
         var simpleTraining = creature.Proficiencies.Get(Trait.Simple);
