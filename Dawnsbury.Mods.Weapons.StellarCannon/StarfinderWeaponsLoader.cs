@@ -37,6 +37,7 @@ public partial class StarfinderWeaponsLoader
     public static Trait AreaTechnical;
     public static Trait Gun;
     public static Trait StarfinderGun;
+    public static Trait NoAmmoAttack;
     private static ModdedIllustration StellarCannonIllustration = null;
     private static ModdedIllustration ScattergunIllustration = null;
     private static ModdedIllustration FlamePistolIllustration = null;
@@ -62,6 +63,7 @@ public partial class StarfinderWeaponsLoader
         AreaTechnical = ModManager.RegisterTrait("AreaTech", new TraitProperties("AreaTechnical", false));
         Gun = ModManager.RegisterTrait("Gun", new TraitProperties("Gun", true, "fires projectiles and has a magazine", false));
         StarfinderGun = ModManager.RegisterTrait("StarfinderGun", new TraitProperties("StarfinderGun", false));
+        NoAmmoAttack = ModManager.RegisterTrait("NoAmmoAttack", new TraitProperties("NoAmmoAttack", false));
 
         if (File.Exists(@"..\CustomMods\StarfinderWeaponsResources\StellarCannon.png"))
         {
@@ -287,7 +289,7 @@ public partial class StarfinderWeaponsLoader
             {
                 Task fireTask = new Task(() =>
                 {
-                    if (combatAction.Traits.Contains(Trait.Strike) && combatAction.Item == gunItem)
+                    if (combatAction.Traits.Contains(Trait.Strike) && combatAction.Item == gunItem && !combatAction.Traits.Contains(NoAmmoAttack))
                     {
                         ((EphemeralAreaProperties)gunItem.EphemeralItemProperties).CurrentMagazine -= gunItem.Usage;
 

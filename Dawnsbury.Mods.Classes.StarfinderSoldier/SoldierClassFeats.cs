@@ -394,7 +394,7 @@ namespace Dawnsbury.Mods.Classes.StarfinderSoldier
                                                 return target == targetCreature ? Usability.Usable : Usability.NotUsableOnThisCreature("not the primary target of last area attack");
                                             })).WithActionCost(1).WithEffectOnEachTarget(async (spell, caster, target, result) =>
                                             {
-                                                await creature.MakePrimaryTargetStrike(targetCreature, areaItem);
+                                                await creature.MakePrimaryTargetStrike(targetCreature, areaItem, false);
                                                 if (targetCreature.HP <= 0 && !creature.FriendOf(targetCreature))
                                                 {
                                                     targetCreature.DeathScheduledForNextStateCheck = true;

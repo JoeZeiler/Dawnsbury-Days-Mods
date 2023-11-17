@@ -212,7 +212,7 @@ public class StarfinderSoldierLoader
 
                 if (closest.Contains(mainTarget) && !mainTarget.DeathScheduledForNextStateCheck)
                 {
-                    await actionOwner.MakePrimaryTargetStrike(mainTarget, areaItem);
+                    await actionOwner.MakePrimaryTargetStrike(mainTarget, areaItem, true);
                     if (mainTarget.HP <= 0 && !actionOwner.FriendOf(mainTarget))
                     {
                         mainTarget.DeathScheduledForNextStateCheck = true;
@@ -430,7 +430,7 @@ public static class SoldierCreatureExtensions
     /// <param name="weapon">weapon being used for the strike</param>
     /// <param name="mapCount">multiple attack penalty multiplier to use, -1 for use current</param>
     /// <returns>the result of the roll to strike.</returns>
-    public static async Task<CheckResult> MakePrimaryTargetStrike(this Creature actionOwnder, Creature targetCreature, Item weapon, int mapCount = -1)
+    public static async Task<CheckResult> MakePrimaryTargetStrike(this Creature actionOwnder, Creature targetCreature, Item weapon,bool free, int mapCount = -1)
     {
         CombatAction meleeStrike = actionOwnder.CreateStrike(weapon, mapCount).WithActionCost(0);
         meleeStrike.Name = "Primary Target Strike";
@@ -438,6 +438,7 @@ public static class SoldierCreatureExtensions
         {
             ChosenCreature = targetCreature
         };
+        if (free) { meleeStrike.Traits.Add(StarfinderWeaponsLoader.NoAmmoAttack); }
         await meleeStrike.AllExecute();
         return meleeStrike.CheckResult;
     }
