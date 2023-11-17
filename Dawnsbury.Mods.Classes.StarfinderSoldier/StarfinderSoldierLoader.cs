@@ -21,7 +21,9 @@ using Dawnsbury.Core.CharacterBuilder.Selections.Options;
 
 namespace Dawnsbury.Mods.Classes.StarfinderSoldier;
 
-
+/// <summary>
+/// creates the starfinder soldier as a class that can be selected in Dawnsbury Days. the Starfinder Weapons mod is required for this.
+/// </summary>
 public class StarfinderSoldierLoader
 {
     public static Trait SoldierTrait;
@@ -29,6 +31,9 @@ public class StarfinderSoldierLoader
     public static Trait ArmorStormTechnical;
     public static Feat FearsomeBulwarkFeat;
     
+    /// <summary>
+    /// loads the starfinder soldier mod. the Starfinder Weapons mod is a dependency
+    /// </summary>
     [DawnsburyDaysModMainMethod]
     public static void LoadMod()
     {
@@ -61,8 +66,15 @@ public class StarfinderSoldierLoader
         ModManager.AddFeat(SoldierClassFeats.QuickSwapFeat());
         ModManager.AddFeat(SoldierClassFeats.MenacingLaughter());
         ModManager.AddFeat(SoldierClassFeats.RelentlessEnduranceFeat());
+        ModManager.AddFeat(SoldierClassFeats.OverwhelmingAssaultFeat());
+        ModManager.AddFeat(SoldierClassFeats.PunishingSalvoFeat());
+        //ModManager.AddFeat(SoldierClassFeats.WidenAreaFeat());
     }
 
+    /// <summary>
+    /// generates the soldier class selection
+    /// </summary>
+    /// <returns>the Soldier class selection feat</returns>
     private static Feat GenerateClassSelectionFeat()
     {
         var soldierSelection = new ClassSelectionFeat(FeatName.CustomFeat, "master of area weapons, heavy armor, and taking punishment.", SoldierTrait,
@@ -84,6 +96,10 @@ public class StarfinderSoldierLoader
         return soldierSelection;
     }
 
+    /// <summary>
+    /// sets up the ability for the creature to use con instead of str for meeting armor strength requirements
+    /// </summary>
+    /// <param name="creature">the creature to add walking armory to</param>
     private static void SetupWalkingArmory(Creature creature)
     {
         creature.AddQEffect(new QEffect("WalkingArmory","When determining your Strength threshold for using medium or heavy armor, you can instead choose to use your Constitution modifier.")
@@ -98,13 +114,18 @@ public class StarfinderSoldierLoader
         });
     }
 
+    /// <summary>
+    /// sets up the creature with the ability to select a primary target, and have them fire at the primary target if it is closest to origin of area fire after using area fire.
+    /// </summary>
+    /// <param name="creature">creature to add primary targeting to</param>
     private static void SetupPrimaryTarget(Creature creature)
     {
         Creature actionOwner = creature;
         Creature mainTarget = null;
         creature.AddQEffect(
-        new QEffect("Primary Target", "Primary Target: You may choose a primary target, if they are the closest creature to the area origin point of an area attack, you may also make a strike against that creature as part of that attack.")
+        new QEffect("Primary Target", "You may choose a primary target, if they are the closest creature to the area origin point of an area attack, you may also make a strike against that creature as part of that attack.")
         {
+            //provides the free action to seelct a primary target
             StateCheck = (qfSelf) =>
             {
                 var carriedItems = actionOwner.HeldItems;
@@ -129,6 +150,7 @@ public class StarfinderSoldierLoader
                 }
 
             },
+            //after you take an area attack action, fire at the primary target
             AfterYouTakeAction = async (qfSelf, action) =>
             {
                 if (!action.Traits.Contains(StarfinderWeaponsLoader.Area) || !(action.Item is AreaItem) || mainTarget == null)
@@ -154,6 +176,7 @@ public class StarfinderSoldierLoader
                 }
                 List<Creature> closest = new List<Creature>();
                 int closestDistance = 999;
+                //deterimines which creatures are closest to the origin of the attack
                 foreach (var creature in chosen)
                 {
                     var bestDist = 999;
@@ -200,9 +223,11 @@ public class StarfinderSoldierLoader
         });
     }
 
-    
-
-
+    /// <summary>
+    /// algorithm to determine what the center tiles in a burst is
+    /// </summary>
+    /// <param name="tiles">the list of tiles to determine the center of</param>
+    /// <returns>the list of tiles that make up the center of the burst</returns>
     private static List<Tile> DetermineCenterTiles(List<Tile> tiles)
     {
         int shortestLongestDistance = 999;
@@ -246,6 +271,10 @@ public class StarfinderSoldierLoader
         return CenterTiles;
     }
 
+    /// <summary>
+    /// sets up the ability for the soldier to suppress targets in its area fire.
+    /// </summary>
+    /// <param name="creature">the creature to add the ability to supress to.</param>
     private static void SetupSoldierSuppression(Creature creature)
     {
         creature.AddQEffect(new QEffect("Suppressing Fire", "Creatures in the affected area who fail their save against your attack become suppressed until the start of your next turn.")
@@ -278,6 +307,10 @@ public class StarfinderSoldierLoader
         });
     }
 
+    /// <summary>
+    /// generates two of the soldier subclasses
+    /// </summary>
+    /// <returns>the list of the two subclasses</returns>
     private static List<Feat> GenerateSoldierSubclasses()
     {
         return new List<Feat>()
@@ -357,6 +390,11 @@ public class StarfinderSoldierLoader
         };
     }
 
+    /// <summary>
+    /// if con is high enough, change armor to not require strength so soldiers with too low stength, but high enough con can use the armor
+    /// </summary>
+    /// <param name="wearer">wearer of the armor</param>
+    /// <returns>the new armor</returns>
     private static Item DetermineNewConArmor(Creature wearer)
     {
         var oldItem = wearer.BaseArmor;
@@ -379,8 +417,19 @@ public class StarfinderSoldierLoader
     }
 }
 
+/// <summary>
+/// extension methods for soldier
+/// </summary>
 public static class SoldierCreatureExtensions
 {
+    /// <summary>
+    /// more specialized version of the MakeStrike function
+    /// </summary>
+    /// <param name="actionOwnder">owner of the strike</param>
+    /// <param name="targetCreature">target of the strike</param>
+    /// <param name="weapon">weapon being used for the strike</param>
+    /// <param name="mapCount">multiple attack penalty multiplier to use, -1 for use current</param>
+    /// <returns>the result of the roll to strike.</returns>
     public static async Task<CheckResult> MakePrimaryTargetStrike(this Creature actionOwnder, Creature targetCreature, Item weapon, int mapCount = -1)
     {
         CombatAction meleeStrike = actionOwnder.CreateStrike(weapon, mapCount).WithActionCost(0);
