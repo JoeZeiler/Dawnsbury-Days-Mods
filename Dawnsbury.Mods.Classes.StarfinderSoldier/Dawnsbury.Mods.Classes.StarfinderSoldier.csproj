@@ -1,0 +1,9 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+  <Import Project="../Dawnsbury.Mod.targets" />
+  <PropertyGroup>
+    <InstallIntoDevelopmentEnvironment>false</InstallIntoDevelopmentEnvironment>
+  </PropertyGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\Dawnsbury.Mods.Weapons.StellarCannon\Dawnsbury.Mods.Weapons.StarfinderWeapons.csproj" />
+  </ItemGroup>
+</Project>
