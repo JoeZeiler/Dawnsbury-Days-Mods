@@ -43,9 +43,9 @@ public class StarfinderSoldierLoader
         SoldierTrait = ModManager.RegisterTrait("Soldier",new TraitProperties("Soldier",true, relevantForShortBlock: true) { IsClassTrait = true});
         BombardTechnical = ModManager.RegisterTrait("BombardTechnical", new TraitProperties("BombardTechnical", false));
         ArmorStormTechnical = ModManager.RegisterTrait("ArmorStormTechnical", new TraitProperties("ArmorStormTechnical", false));
-        if (File.Exists(@"..\CustomMods\StarfinderWeaponsResources\StellarCannon.png"))
+        if (File.Exists(@"..\CustomMods\StarfinderSoldierResources\Suppressed.png"))
         {
-            SuppressedIllustration = new ModdedIllustration(@"StarfinderWeaponsResources\StellarCannon.png");
+            SuppressedIllustration = new ModdedIllustration(@"StarfinderSoldierResources\Suppressed.png");
         }
         FearsomeBulwarkFeat = new Feat(FeatName.CustomFeat, "Fearsome Bulwark", "You can use your Constitution modifier instead of your Charisma modifier on Intimidation checks, this does not show up on your character sheet", new List<Trait>(), new List<Feat>()).WithOnCreature((creature) =>
         {
