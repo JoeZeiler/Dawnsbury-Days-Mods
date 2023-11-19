@@ -31,6 +31,12 @@ namespace Dawnsbury.Mods.Classes.StarfinderSoldier
                     return new Core.Mechanics.Core.Bonus(-2, Core.Mechanics.Core.BonusType.Status, "Supressed", false);
                 }
             };
+
+            if(StarfinderSoldierLoader.SuppressedIllustration != null)
+            {
+                effect.Illustration = StarfinderSoldierLoader.SuppressedIllustration;
+            }
+
             return effect;
         }
     }

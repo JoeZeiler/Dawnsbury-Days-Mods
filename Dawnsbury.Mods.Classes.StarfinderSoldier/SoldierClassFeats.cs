@@ -100,6 +100,11 @@ namespace Dawnsbury.Mods.Classes.StarfinderSoldier
                                         }
                                     });
 
+                                    if(StarfinderSoldierLoader.SuppressedIllustration!=null)
+                                    {
+                                        pinDownAction.Illustration = StarfinderSoldierLoader.SuppressedIllustration;
+                                    }
+
                                     return new ActionPossibility(pinDownAction);
                                 }
                             });
@@ -401,6 +406,7 @@ namespace Dawnsbury.Mods.Classes.StarfinderSoldier
                                                     await targetCreature.Battle.GameLoop.StateCheck();
                                                 }
                                             });
+                                        punishSalvo.Item = areaItem;
                                         return new ActionPossibility(punishSalvo);
                                     }
                                 });

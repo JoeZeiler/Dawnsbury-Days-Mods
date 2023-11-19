@@ -18,6 +18,8 @@ using Dawnsbury.Core.Possibilities;
 using Dawnsbury.Core;
 using Dawnsbury.Core.Mechanics.Treasure;
 using Dawnsbury.Core.CharacterBuilder.Selections.Options;
+using Dawnsbury.Display.Illustrations;
+using System.IO;
 
 namespace Dawnsbury.Mods.Classes.StarfinderSoldier;
 
@@ -30,7 +32,8 @@ public class StarfinderSoldierLoader
     public static Trait BombardTechnical;
     public static Trait ArmorStormTechnical;
     public static Feat FearsomeBulwarkFeat;
-    
+    public static ModdedIllustration SuppressedIllustration = null;
+
     /// <summary>
     /// loads the starfinder soldier mod. the Starfinder Weapons mod is a dependency
     /// </summary>
@@ -40,6 +43,10 @@ public class StarfinderSoldierLoader
         SoldierTrait = ModManager.RegisterTrait("Soldier",new TraitProperties("Soldier",true, relevantForShortBlock: true) { IsClassTrait = true});
         BombardTechnical = ModManager.RegisterTrait("BombardTechnical", new TraitProperties("BombardTechnical", false));
         ArmorStormTechnical = ModManager.RegisterTrait("ArmorStormTechnical", new TraitProperties("ArmorStormTechnical", false));
+        if (File.Exists(@"..\CustomMods\StarfinderSoldierResources\Suppressed.png"))
+        {
+            SuppressedIllustration = new ModdedIllustration(@"StarfinderSoldierResources\Suppressed.png");
+        }
         FearsomeBulwarkFeat = new Feat(FeatName.CustomFeat, "Fearsome Bulwark", "You can use your Constitution modifier instead of your Charisma modifier on Intimidation checks, this does not show up on your character sheet", new List<Trait>(), new List<Feat>()).WithOnCreature((creature) =>
         {
             creature.AddQEffect(new QEffect("Fearsome Bulwark", "You can use your Constitution modifier instead of your Charisma modifier on Intimidation checks, this does not show up on your character sheet.")
@@ -78,8 +85,8 @@ public class StarfinderSoldierLoader
     private static Feat GenerateClassSelectionFeat()
     {
         var soldierSelection = new ClassSelectionFeat(FeatName.CustomFeat, "master of area weapons, heavy armor, and taking punishment.", SoldierTrait,
-            new EnforcedAbilityBoost(Ability.Constitution), 10, new[] { Trait.Perception, Trait.Reflex, Trait.Will, Trait.Intimidation, Trait.Simple, Trait.Martial, Trait.Unarmed, Trait.UnarmoredDefense, Trait.LightArmor, Trait.MediumArmor, Trait.HeavyArmor },
-            new[] { Trait.Fortitude }, 3, "1. Suppressing Fire:  Creatures in the affected area who fail their save against your attack become suppressed until the start of your next turn." +
+            new EnforcedAbilityBoost(Ability.Constitution), 10, new[] { Trait.Perception, Trait.Reflex, Trait.Intimidation, Trait.Simple, Trait.Martial, Trait.Unarmed, Trait.UnarmoredDefense, Trait.LightArmor, Trait.MediumArmor, Trait.HeavyArmor },
+            new[] { Trait.Fortitude, Trait.Will }, 3, "1. Suppressing Fire:  Creatures in the affected area who fail their save against your attack become suppressed until the start of your next turn." +
             "\r\n2. Primary Target: You may choose a primary target, if they are the closest creature to the area origin point of an area attack, you may also make a strike against that creature as part of that attack." +
             "\r\n3. Fighting Style: As a soldier, you applied yourself to a specific style of combat. Your style determines how you tend to approach combat and how you take advantage of your ability to suppress targets." +
             "\r\n4. WalkingArmory: When determining your Strength threshold for using medium or heavy armor, you can instead choose to use your Constitution modifier." +
@@ -139,7 +146,8 @@ public class StarfinderSoldierLoader
                             var addedText = (mainTarget != null ? "\n[currently: " + mainTarget.Name + "]" : string.Empty);
                             CombatAction SetPrimaryTarget = new CombatAction(actionOwner, IllustrationName.TrueStrike, "Select Primary Target" + addedText, new Trait[] { },
                                 "Select a foe, as long as they are the closest creature to the center of a Burst area fire or the closest creature to you when using a a cone or line area fire, you will also attempt to strike that creature.",
-                                Target.RangedCreature(100)).WithActionCost(0)
+                                Target.RangedCreature(100).WithAdditionalConditionOnTargetCreature((caster, target)=>target.FriendOf(caster)?Usability.NotUsableOnThisCreature("cannot choose ally as primary target."):Usability.Usable))
+                                .WithActionCost(0)
                                 .WithEffectOnEachTarget(async (spell, caster, target, result) =>
                                 {
                                     mainTarget = target;
@@ -288,11 +296,15 @@ public class StarfinderSoldierLoader
                 var chosen = action.ChosenTargets;
                 foreach (Creature chosenTarget in chosen.ChosenCreatures)
                 {
-                    if((action.Owner.Traits.Contains(BombardTechnical) && action.Owner.FriendOfAndNotSelf(chosenTarget)) || (action.Owner.Traits.Contains(ArmorStormTechnical) && action.Owner == chosenTarget))
+                    if(action.Owner.FriendOf(chosenTarget))
                     {
                         continue;
                     }
 
+                    if (!chosen.CheckResults.ContainsKey(chosenTarget))
+                    {
+                        continue;
+                    }
                     var result = chosen.CheckResults[chosenTarget];
                     if (result == CheckResult.Failure || result == CheckResult.CriticalFailure || (result == CheckResult.Success && action.Owner.Traits.Contains(BombardTechnical)))
                     {

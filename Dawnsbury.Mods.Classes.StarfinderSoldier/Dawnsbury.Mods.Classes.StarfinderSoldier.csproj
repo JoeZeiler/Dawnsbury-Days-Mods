@@ -6,4 +6,9 @@
   <ItemGroup>
     <ProjectReference Include="..\Dawnsbury.Mods.Weapons.StellarCannon\Dawnsbury.Mods.Weapons.StarfinderWeapons.csproj" />
   </ItemGroup>
+  <ItemGroup>
+    <None Update="StarfinderSoldierResources\Suppressed.png">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+  </ItemGroup>
 </Project>
