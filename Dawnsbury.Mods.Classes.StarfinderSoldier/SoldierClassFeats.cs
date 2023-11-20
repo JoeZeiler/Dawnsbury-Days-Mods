@@ -193,6 +193,10 @@ namespace Dawnsbury.Mods.Classes.StarfinderSoldier
                                     break;
                                 }
                             }
+                            if(swapToItem == null)
+                            {
+                                return;
+                            }
 
                             ConfirmationRequest req = new ConfirmationRequest(creature, "Would you like to swap to " + swapToItem.Name + "?", IllustrationName.Reaction, "yes", "no");
 
