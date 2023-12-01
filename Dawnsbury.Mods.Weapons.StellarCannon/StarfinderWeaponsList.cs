@@ -303,7 +303,7 @@ namespace Dawnsbury.Mods.Weapons.StarfinderWeapons
         /// <returns>the laser pistol item</returns>
         private static Item CreateLaserPistol(ItemName iName)
         {
-            GunItem laserPistol = new GunItem(iName, IllustrationName.QuestionMark, "Laser Pistol", 0, 3, new[] { Tech, Trait.Ranged, Trait.Martial, Trait.Simple, Trait.Weapon, Gun, StarfinderGun })
+            GunItem laserPistol = new GunItem(iName, IllustrationName.QuestionMark, "Laser Pistol", 0, 3, new[] { Tech, Trait.Ranged, Trait.Simple, Trait.Weapon, Gun, StarfinderGun })
             {
                 BaseGunItemName = "Laser Pistol",
                 MainTrait = Trait.Weapon,
