@@ -193,6 +193,10 @@ namespace Dawnsbury.Mods.Classes.StarfinderSoldier
                                     break;
                                 }
                             }
+                            if(swapToItem == null)
+                            {
+                                return;
+                            }
 
                             ConfirmationRequest req = new ConfirmationRequest(creature, "Would you like to swap to " + swapToItem.Name + "?", IllustrationName.Reaction, "yes", "no");
 
@@ -281,7 +285,7 @@ namespace Dawnsbury.Mods.Classes.StarfinderSoldier
                 //the task to ask the player if they want to gain temp HP
                 async Task TakeDamage(QEffect qeffect, int amount, DamageKind kind, CombatAction action, bool critical)
                 {
-                    if (!enduranceUsed && creature.Actions.CanTakeReaction())
+                    if (!enduranceUsed && creature.Actions.CanTakeReaction() && amount > 0)
                     {
                         ConfirmationRequest req = new ConfirmationRequest(creature, "Would you like to use Relentless Endurance to gain 1d8+4 temporary HP?", IllustrationName.Reaction, "yes", "no");
 

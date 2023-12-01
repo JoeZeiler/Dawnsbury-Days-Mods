@@ -85,8 +85,8 @@ public class StarfinderSoldierLoader
     private static Feat GenerateClassSelectionFeat()
     {
         var soldierSelection = new ClassSelectionFeat(FeatName.CustomFeat, "master of area weapons, heavy armor, and taking punishment.", SoldierTrait,
-            new EnforcedAbilityBoost(Ability.Constitution), 10, new[] { Trait.Perception, Trait.Reflex, Trait.Intimidation, Trait.Simple, Trait.Martial, Trait.Unarmed, Trait.UnarmoredDefense, Trait.LightArmor, Trait.MediumArmor, Trait.HeavyArmor },
-            new[] { Trait.Fortitude, Trait.Will }, 3, "1. Suppressing Fire:  Creatures in the affected area who fail their save against your attack become suppressed until the start of your next turn." +
+            new EnforcedAbilityBoost(Ability.Constitution), 10, new[] { Trait.Perception, Trait.Reflex, Trait.Simple, Trait.Martial, Trait.Unarmed, Trait.UnarmoredDefense, Trait.LightArmor, Trait.MediumArmor, Trait.HeavyArmor },
+            new[] { Trait.Fortitude, Trait.Will }, 4, "1. Suppressing Fire:  Creatures in the affected area who fail their save against your attack become suppressed until the start of your next turn." +
             "\r\n2. Primary Target: You may choose a primary target, if they are the closest creature to the area origin point of an area attack, you may also make a strike against that creature as part of that attack." +
             "\r\n3. Fighting Style: As a soldier, you applied yourself to a specific style of combat. Your style determines how you tend to approach combat and how you take advantage of your ability to suppress targets." +
             "\r\n4. WalkingArmory: When determining your Strength threshold for using medium or heavy armor, you can instead choose to use your Constitution modifier." +
@@ -161,7 +161,7 @@ public class StarfinderSoldierLoader
             //after you take an area attack action, fire at the primary target
             AfterYouTakeAction = async (qfSelf, action) =>
             {
-                if (!action.Traits.Contains(StarfinderWeaponsLoader.Area) || !(action.Item is AreaItem) || mainTarget == null)
+                if (!action.Traits.Contains(StarfinderWeaponsLoader.Area) || !(action.Item is AreaItem))
                 {
                     return;
                 }
@@ -218,9 +218,11 @@ public class StarfinderSoldierLoader
                 }
                 var areaItem = action.Item;
 
-                if (closest.Contains(mainTarget) && !mainTarget.DeathScheduledForNextStateCheck)
+                if (mainTarget != null && closest.Contains(mainTarget) && !mainTarget.DeathScheduledForNextStateCheck)
                 {
-                    await actionOwner.MakePrimaryTargetStrike(mainTarget, areaItem, true);
+                    var attackAmmount = action.Owner.Actions.AttackedThisManyTimesThisTurn;
+                    await actionOwner.MakePrimaryTargetStrike(mainTarget, areaItem, true, attackAmmount+1).WaitAsync(TimeSpan.FromSeconds(2));
+                    action.Owner.Actions.AttackedThisManyTimesThisTurn = attackAmmount;
                     if (mainTarget.HP <= 0 && !actionOwner.FriendOf(mainTarget))
                     {
                         mainTarget.DeathScheduledForNextStateCheck = true;
@@ -350,7 +352,7 @@ public class StarfinderSoldierLoader
                         {
                             if (attacker.QEffects.Any((qft)=>qft.Name == "Supressed"))
                             {
-                                return new ReduceDamageModification(Math.Max(Math.Max(self.Level / 2, 1) - self.WeaknessAndResistance.Resistances.FirstOrDefault(r => r.DamageKind == dStuff.Kind, new Resistance(DamageKind.Chaotic, 0, false)).Value, 0), "Resistance equal to 1/2 level (minimum 1) against supressed targets");
+                                return new ReduceDamageModification(Math.Max(Math.Max(self.Level / 2, 1) - self.WeaknessAndResistance.Resistances.FirstOrDefault(r => r.DamageKind == dStuff.Kind, new Resistance(DamageKind.Chaotic, 0)).Value, 0), "Resistance equal to 1/2 level (minimum 1) against supressed targets");
                             }
                             else
                             {
