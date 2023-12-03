@@ -380,7 +380,7 @@ public partial class StarfinderWeaponsLoader
 
                 areaFireAction = new CombatAction(weaponOwner, IllustrationName.BurningJet,
                     areaItem.Name + " Area Fire",
-                    new[] { Area, Trait.Attack, Trait.Ranged },
+                    new[] { Area, Trait.Attack, Trait.Manipulate},
                     "DC " + GetBestAreaDC(weaponOwner, areaItem) + " Basic Reflex. " +
                      "use an area fire weapon to attack in a " + effectRange * 5 + " ft. " + areaType + " for " + areaItem.WeaponProperties.Damage + " " + areaItem.WeaponProperties.DamageKind.ToString() + " damage.", target)
                     { Item = areaItem}
@@ -447,7 +447,7 @@ public partial class StarfinderWeaponsLoader
 
                     autoFireAction = new CombatAction(weaponOwner, IllustrationName.HailOfSplinters,
                         areaItem.Name + " Automatic Fire",
-                        new[] { Area, Trait.Attack, AutomaticTechnical, Trait.Ranged },
+                        new[] { Area, Trait.Attack, AutomaticTechnical, Trait.Manipulate},
                         "DC " + GetBestAreaDC(weaponOwner, areaItem, true) + " Basic Reflex. " +
                          "use an automatic fire weapon to attack in a " + effectRange * 5 + " ft. cone for " + areaItem.WeaponProperties.Damage + " " + areaItem.WeaponProperties.DamageKind.ToString() + " damage.", Target.Cone(effectRange))
                     { Item = areaItem }
