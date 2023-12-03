@@ -144,7 +144,7 @@ public class StarfinderSoldierLoader
                         {
                             Creature thisCreature = actionOwner;
                             var addedText = (mainTarget != null ? "\n[currently: " + mainTarget.Name + "]" : string.Empty);
-                            CombatAction SetPrimaryTarget = new CombatAction(actionOwner, IllustrationName.TrueStrike, "Select Primary Target" + addedText, new Trait[] { },
+                            CombatAction SetPrimaryTarget = new CombatAction(actionOwner, IllustrationName.TrueStrike, "Select Primary Target" + addedText, new Trait[] { Trait.AlwaysHits},
                                 "Select a foe, as long as they are the closest creature to the center of a Burst area fire or the closest creature to you when using a a cone or line area fire, you will also attempt to strike that creature.",
                                 Target.RangedCreature(100).WithAdditionalConditionOnTargetCreature((caster, target)=>target.FriendOf(caster)?Usability.NotUsableOnThisCreature("cannot choose ally as primary target."):Usability.Usable))
                                 .WithActionCost(0)
@@ -221,7 +221,7 @@ public class StarfinderSoldierLoader
                 if (mainTarget != null && closest.Contains(mainTarget) && !mainTarget.DeathScheduledForNextStateCheck)
                 {
                     var attackAmmount = action.Owner.Actions.AttackedThisManyTimesThisTurn;
-                    await actionOwner.MakePrimaryTargetStrike(mainTarget, areaItem, true, attackAmmount+1).WaitAsync(TimeSpan.FromSeconds(2));
+                    await actionOwner.MakePrimaryTargetStrike(mainTarget, areaItem, true, attackAmmount).WaitAsync(TimeSpan.FromSeconds(2));
                     action.Owner.Actions.AttackedThisManyTimesThisTurn = attackAmmount;
                     if (mainTarget.HP <= 0 && !actionOwner.FriendOf(mainTarget))
                     {
