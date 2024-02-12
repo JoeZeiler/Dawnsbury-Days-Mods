@@ -7,7 +7,9 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Dawnsbury.Mods.Weapons.Star
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Dawnsbury.Mods.Feats.General.BonMot", "BonMot-Mod\Dawnsbury.Mods.Feats.General.BonMot.csproj", "{F4D9EA05-48EC-4862-ABF5-12E5D1506E3E}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Dawnsbury.Mods.Classes.StarfinderSoldier", "Dawnsbury.Mods.Classes.StarfinderSoldier\Dawnsbury.Mods.Classes.StarfinderSoldier.csproj", "{E783DA53-AC55-4DCE-AE9F-697BA9986630}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Dawnsbury.Mods.Classes.StarfinderSoldier", "Dawnsbury.Mods.Classes.StarfinderSoldier\Dawnsbury.Mods.Classes.StarfinderSoldier.csproj", "{E783DA53-AC55-4DCE-AE9F-697BA9986630}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Dawnsbury.Mods.Creatures.Starfinder.Playtest", "Dawnsbury.Mods.Creatures.Starfinder.Playtest\Dawnsbury.Mods.Creatures.Starfinder.Playtest.csproj", "{570AE340-22D1-4A42-9839-6B21CCCA3F3E}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -27,6 +29,10 @@ Global
 		{E783DA53-AC55-4DCE-AE9F-697BA9986630}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{E783DA53-AC55-4DCE-AE9F-697BA9986630}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{E783DA53-AC55-4DCE-AE9F-697BA9986630}.Release|Any CPU.Build.0 = Release|Any CPU
+		{570AE340-22D1-4A42-9839-6B21CCCA3F3E}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{570AE340-22D1-4A42-9839-6B21CCCA3F3E}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{570AE340-22D1-4A42-9839-6B21CCCA3F3E}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{570AE340-22D1-4A42-9839-6B21CCCA3F3E}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
