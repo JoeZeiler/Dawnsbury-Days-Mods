@@ -380,17 +380,21 @@ public partial class StarfinderWeaponsLoader
 
                 areaFireAction = new CombatAction(weaponOwner, IllustrationName.BurningJet,
                     areaItem.Name + " Area Fire",
-                    new[] { Area, Trait.Attack, Trait.Manipulate},
+                    new[] { Area, Trait.Attack, Trait.Manipulate },
                     "DC " + GetBestAreaDC(weaponOwner, areaItem) + " Basic Reflex. " +
                      "use an area fire weapon to attack in a " + effectRange * 5 + " ft. " + areaType + " for " + areaItem.WeaponProperties.Damage + " " + areaItem.WeaponProperties.DamageKind.ToString() + " damage.", target)
-                    { Item = areaItem}
+                    { Item = areaItem }
                     .WithActionCost(2)
                     .WithSavingThrow(new SavingThrow(Defense.Reflex, (creature) =>
                     {
                         return GetBestAreaDC(creature, areaItem);
                     }
                     ))
-                    .WithEffectOnSelf((self) => ((EphemeralAreaProperties)areaItem.EphemeralItemProperties).CurrentMagazine -= areaItem.Usage)
+                    .WithEffectOnSelf((self) =>
+                    {
+                        ((EphemeralAreaProperties)areaItem.EphemeralItemProperties).CurrentMagazine -= areaItem.Usage;
+                        self.DetectionStatus.Undetected = false;
+                    })
                     .WithEffectOnEachTarget(async (action, user, target, result) =>
                     {
                         DamageKind kind = areaItem.WeaponProperties.DamageKind;
