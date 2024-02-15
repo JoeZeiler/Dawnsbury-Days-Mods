@@ -4,5 +4,8 @@
   <PropertyGroup>
     <InstallIntoDevelopmentEnvironment>false</InstallIntoDevelopmentEnvironment>
   </PropertyGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\MapReaderUtility\MapReaderUtility.csproj" />
+  </ItemGroup>
 
 </Project>
