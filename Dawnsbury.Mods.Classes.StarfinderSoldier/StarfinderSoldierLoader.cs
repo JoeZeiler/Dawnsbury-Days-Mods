@@ -43,10 +43,9 @@ public class StarfinderSoldierLoader
         SoldierTrait = ModManager.RegisterTrait("Soldier",new TraitProperties("Soldier",true, relevantForShortBlock: true) { IsClassTrait = true});
         BombardTechnical = ModManager.RegisterTrait("BombardTechnical", new TraitProperties("BombardTechnical", false));
         ArmorStormTechnical = ModManager.RegisterTrait("ArmorStormTechnical", new TraitProperties("ArmorStormTechnical", false));
-        if (File.Exists(@"..\CustomMods\StarfinderSoldierResources\Suppressed.png"))
-        {
-            SuppressedIllustration = new ModdedIllustration(@"StarfinderSoldierResources\Suppressed.png");
-        }
+
+        SuppressedIllustration = new ModdedIllustration(@"StarfinderSoldierResources\Suppressed.png");
+
         FearsomeBulwarkFeat = new Feat(FeatName.CustomFeat, "Fearsome Bulwark", "You can use your Constitution modifier instead of your Charisma modifier on Intimidation checks, this does not show up on your character sheet", new List<Trait>(), new List<Feat>()).WithOnCreature((creature) =>
         {
             creature.AddQEffect(new QEffect("Fearsome Bulwark", "You can use your Constitution modifier instead of your Charisma modifier on Intimidation checks, this does not show up on your character sheet.")
@@ -419,7 +418,7 @@ public class StarfinderSoldierLoader
         if (oldItem.ArmorProperties.Strength <= wearer.Abilities.Constitution)
         {
             ArmorProperties oldArmorProps = oldItem.ArmorProperties;
-            var newItem = new Item(oldItem.ItemName, IllustrationName.QuestionMark, oldItem.Name, oldItem.Price, oldItem.Price, oldItem.Traits.ToArray());
+            var newItem = new Item(oldItem.ItemName, (Illustration)IllustrationName.QuestionMark, oldItem.Name, oldItem.Price, oldItem.Price, oldItem.Traits.ToArray());
             newItem.Illustration = oldItem.Illustration;
             newItem.ArmorProperties = new ArmorProperties(oldArmorProps.ACBonus, oldArmorProps.DexCap, oldArmorProps.CheckPenalty, oldArmorProps.SpeedPenalty, 8);
             return newItem;

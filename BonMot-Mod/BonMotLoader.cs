@@ -38,9 +38,9 @@ public class BonMotLoader
     [DawnsburyDaysModMainMethod]
     public static void LoadMod()
     {
-        DairyBottleIllustration = File.Exists(@"..\CustomMods\BonMotResources\DairyBottle.png") ? new ModdedIllustration(@"BonMotResources\DairyBottle.png") : null;
-        GuybrushIllustration = File.Exists(@"..\CustomMods\BonMotResources\GuybrushWithSword.png") ? new ModdedIllustration(@"BonMotResources\GuybrushWithSword.png") : null;
-        CaptainSmirkIllustration = File.Exists(@"..\CustomMods\BonMotResources\CaptainSmirk.png") ? new ModdedIllustration(@"BonMotResources\CaptainSmirk.png") : null;
+        DairyBottleIllustration = new ModdedIllustration(@"BonMotResources\DairyBottle.png");
+        GuybrushIllustration = new ModdedIllustration(@"BonMotResources\GuybrushWithSword.png");
+        CaptainSmirkIllustration = new ModdedIllustration(@"BonMotResources\CaptainSmirk.png");
         List<Tuple<string, string, string>> insultDirectory = LoadInsultDirectory();
         //registering the linguistic trait so we can add it to Bon Mot
         Linguistic = ModManager.RegisterTrait(
