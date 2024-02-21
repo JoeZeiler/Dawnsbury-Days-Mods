@@ -11,6 +11,8 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Dawnsbury.Mods.Classes.Star
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MapReaderUtility", "MapReaderUtility\MapReaderUtility.csproj", "{8C836647-7A31-43D9-BDE9-E1AB8663BFB1}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Dawnsbury.Mods.Ancestries.StarfinderAndroid", "Dawnsbury.Mods.Ancestries.StarfinderAndroid\Dawnsbury.Mods.Ancestries.StarfinderAndroid.csproj", "{DD9F7620-ED5F-4018-A125-CD06597D0543}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -33,6 +35,10 @@ Global
 		{8C836647-7A31-43D9-BDE9-E1AB8663BFB1}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{8C836647-7A31-43D9-BDE9-E1AB8663BFB1}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{8C836647-7A31-43D9-BDE9-E1AB8663BFB1}.Release|Any CPU.Build.0 = Release|Any CPU
+		{DD9F7620-ED5F-4018-A125-CD06597D0543}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{DD9F7620-ED5F-4018-A125-CD06597D0543}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{DD9F7620-ED5F-4018-A125-CD06597D0543}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{DD9F7620-ED5F-4018-A125-CD06597D0543}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

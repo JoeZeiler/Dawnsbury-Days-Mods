@@ -65,26 +65,15 @@ public partial class StarfinderWeaponsLoader
         StarfinderGun = ModManager.RegisterTrait("StarfinderGun", new TraitProperties("StarfinderGun", false));
         NoAmmoAttack = ModManager.RegisterTrait("NoAmmoAttack", new TraitProperties("NoAmmoAttack", false));
 
-        if (File.Exists(@"..\CustomMods\StarfinderWeaponsResources\StellarCannon.png"))
-        {
-            StellarCannonIllustration = new ModdedIllustration(@"StarfinderWeaponsResources\StellarCannon.png");
-        }
-        if (File.Exists(@"..\CustomMods\StarfinderWeaponsResources\Scattergun.png"))
-        {
-            ScattergunIllustration = new ModdedIllustration(@"StarfinderWeaponsResources\Scattergun.png");
-        }
-        if (File.Exists(@"..\CustomMods\StarfinderWeaponsResources\FlamePistol.png"))
-        {
-            FlamePistolIllustration = new ModdedIllustration(@"StarfinderWeaponsResources\FlamePistol.png");
-        }
-        if (File.Exists(@"..\CustomMods\StarfinderWeaponsResources\Rotolaser.png"))
-        {
-            RotolaserIllustration = new ModdedIllustration(@"StarfinderWeaponsResources\Rotolaser.png");
-        }
-        if (File.Exists(@"..\CustomMods\StarfinderWeaponsResources\LaserPistol.png"))
-        {
-            LaserPistolIllustration = new ModdedIllustration(@"StarfinderWeaponsResources\LaserPistol.png");
-        }
+        StellarCannonIllustration = new ModdedIllustration(@"StarfinderWeaponsResources\StellarCannon.png");
+
+        ScattergunIllustration = new ModdedIllustration(@"StarfinderWeaponsResources\Scattergun.png");
+
+        FlamePistolIllustration = new ModdedIllustration(@"StarfinderWeaponsResources\FlamePistol.png");
+
+        RotolaserIllustration = new ModdedIllustration(@"StarfinderWeaponsResources\Rotolaser.png");
+
+        LaserPistolIllustration = new ModdedIllustration(@"StarfinderWeaponsResources\LaserPistol.png");
 
         ModManager.RegisterActionOnEachCreature(ApplyStarfinderGun);
         ModManager.RegisterActionOnEachCreature(ApplyAreaFire);

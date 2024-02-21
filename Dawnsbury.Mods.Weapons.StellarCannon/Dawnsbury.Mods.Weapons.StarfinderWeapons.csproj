@@ -20,4 +20,7 @@
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
   </ItemGroup>
+  <Target Name="PostBuild" AfterTargets="PostBuildEvent">
+    <Exec Command="xcopy &quot;$(TargetDir)StarfinderWeaponsResources\*.*&quot; &quot;$(TargetDir)Workshop Content\CustomMods\StarfinderWeaponsResources&quot; /Y /I /E&#xD;&#xA;copy /Y &quot;$(TargetDir)$(ProjectName).dll&quot; &quot;$(TargetDir)Workshop Content\CustomMods\$(ProjectName).dll&quot;" />
+  </Target>
 </Project>
