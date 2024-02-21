@@ -1,4 +1,4 @@
-<Project Sdk="Microsoft.NET.Sdk">
+﻿<Project Sdk="Microsoft.NET.Sdk">
 	<Import Project="../Dawnsbury.Mod.targets" />
   <ItemGroup>
     <None Update="BonMotResources\CaptainSmirk.png">
@@ -17,4 +17,7 @@
 	<PropertyGroup>
 		<InstallIntoDevelopmentEnvironment>false</InstallIntoDevelopmentEnvironment>
 	</PropertyGroup>
+	<Target Name="PostBuild" AfterTargets="PostBuildEvent">
+	  <Exec Command="xcopy &quot;$(TargetDir)BonMotResources\*.*&quot; &quot;$(TargetDir)Workshop Content\CustomMods\BonMotResources&quot; /Y /I /E&#xD;&#xA;copy /Y &quot;$(TargetDir)$(ProjectName).dll&quot; &quot;$(TargetDir)Workshop Content\CustomMods\$(ProjectName).dll&quot;" />
+	</Target>
 </Project>

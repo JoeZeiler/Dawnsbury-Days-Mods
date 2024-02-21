@@ -240,7 +240,7 @@ namespace Dawnsbury.Mods.Classes.StarfinderSoldier
                             return null;
                         }
                         var self = qfself.Owner;
-                        CombatAction laugh = new CombatAction(self, IllustrationName.HideousLaughter, "Menacing Laughter", new[] { Trait.Auditory, StarfinderSoldierLoader.SoldierTrait }
+                        CombatAction laugh = new CombatAction(self, IllustrationName.HideousLaughter, "Menacing Laughter", new[] { Trait.Auditory, StarfinderSoldierLoader.SoldierTrait, Trait.Skill, Trait.Fear, Trait.Intimidation }
                         , "Attempt Intimidation checks to Demoralize each creature within 30 feet who you suppressed this turn.", Target.Emanation(6).WithIncludeOnlyIf((target, creature) =>
                         {
                             if (creature.FriendOf(self))
@@ -396,7 +396,7 @@ namespace Dawnsbury.Mods.Classes.StarfinderSoldier
                                         }
                                         var strikeTraits = areaItem.Traits;
                                         strikeTraits.Add(StarfinderSoldierLoader.SoldierTrait);
-                                        var punishSalvo = new CombatAction(creature, IllustrationName.TrueStrike, "Punishing Salve", strikeTraits.ToArray(),
+                                        var punishSalvo = new CombatAction(creature, IllustrationName.TrueStrike, "Punishing Salvo", strikeTraits.ToArray(),
                                             "make a second Strike against the primary target of your last area attack, ignoring the effect of the unwieldy trait that prevents additional attacks.",
                                             Target.Ranged(areaItem.WeaponProperties.RangeIncrement * 5).WithAdditionalConditionOnTargetCreature((creature, target) =>
                                             {
