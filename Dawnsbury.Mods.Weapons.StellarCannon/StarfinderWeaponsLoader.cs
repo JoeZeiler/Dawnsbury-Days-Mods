@@ -50,18 +50,17 @@ public partial class StarfinderWeaponsLoader
     [DawnsburyDaysModMainMethod]
     public static void LoadMod()
     {
-        Analogue = ModManager.RegisterTrait("Analogue", new TraitProperties("Analogue", true, "does not rely on digital technology"));
-        Tech = ModManager.RegisterTrait("Tech", new TraitProperties("Tech", true, "Incorporates electronics,computer systems, and power sources.", true));
+        Analogue = ModManager.RegisterTrait("Analogue", new TraitProperties("Analogue", true, "Does not rely on digital technology.")); Tech = ModManager.RegisterTrait("Tech", new TraitProperties("Tech", true, "Incorporates electronics,computer systems, and power sources.", true));
         Unwieldy = ModManager.RegisterTrait("Unwieldy", new TraitProperties("Unwieldy", true, "You can’t use an unwieldy weapon more than once per round and can’t use it to Strike as part of a reaction",true));
         AreaBurst10ft = ModManager.RegisterTrait("AreaBurst10ft", new TraitProperties("Area (Burst 10 ft.)", true, "Weapons with this trait can only fire using the Area Fire action. The DC is equal to 10 + your attack bonus with this weapon using strength or constitution (except expert proficiency is treated as trained).", true));
         AreaCone = ModManager.RegisterTrait("AreaCone", new TraitProperties("Area (Cone)", true, "Weapons with this trait can only fire using the Area Fire action. The DC is equal to 10 + your attack bonus with this weapon using strength or constitution (except expert proficiency is treated as trained).", true));
         AreaLine = ModManager.RegisterTrait("AreaLine", new TraitProperties("Area (Line)", true, "Weapons with this trait can only fire using the Area Fire action. The DC is equal to 10 + your attack bonus with this weapon using strength or constitution (except expert proficiency is treated as trained).", true));
         Concussive = ModManager.RegisterTrait("Concussive", new TraitProperties("Concussive", true, "Use the weaker of the target’s resistance or immunity\r\nto piercing or to bludgeoning."));
-        Area = ModManager.RegisterTrait("Area", new TraitProperties("Area", true, "the effect happens in a targeted area", true));
+        Area = ModManager.RegisterTrait("Area", new TraitProperties("Area", true, "The effect happens in a targeted area.", true));
         Automatic = ModManager.RegisterTrait("Automatic", new TraitProperties("Automatic", true, "Can use the 'Automatic Fire' action.The DC is equal to 10 + your attack bonus with this weapon using strength, constitution, or dexterity (except expert proficiency is treated as trained).", true));
         AutomaticTechnical = ModManager.RegisterTrait("AutomaticTechnical", new TraitProperties("AutomaticTechnical", false));
         AreaTechnical = ModManager.RegisterTrait("AreaTech", new TraitProperties("AreaTechnical", false));
-        Gun = ModManager.RegisterTrait("Gun", new TraitProperties("Gun", true, "fires projectiles and has a magazine", false));
+        Gun = ModManager.RegisterTrait("Gun", new TraitProperties("Gun", true, "Fires projectiles and has a magazine.", false));
         StarfinderGun = ModManager.RegisterTrait("StarfinderGun", new TraitProperties("StarfinderGun", false));
         NoAmmoAttack = ModManager.RegisterTrait("NoAmmoAttack", new TraitProperties("NoAmmoAttack", false));
 
