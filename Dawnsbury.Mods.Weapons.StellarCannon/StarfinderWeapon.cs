@@ -1,6 +1,7 @@
 ﻿using Dawnsbury.Core.Mechanics.Enumerations;
 using Dawnsbury.Core.Mechanics.Treasure;
 using Dawnsbury.Core;
+using Dawnsbury.Display.Illustrations;
 
 namespace Dawnsbury.Mods.Weapons.StarfinderWeapons
 {
@@ -24,7 +25,7 @@ namespace Dawnsbury.Mods.Weapons.StarfinderWeapons
         {
 
         }
-        public GunItem(ItemName itemName, IllustrationName illustration, string name, int level, int price, params Trait[] traits) : base(itemName, illustration, name, level, price, traits)
+        public GunItem(ItemName itemName, IllustrationName illustration, string name, int level, int price, params Trait[] traits) : base(itemName, (Illustration)illustration, name, level, price, traits)
         {
         }
 
