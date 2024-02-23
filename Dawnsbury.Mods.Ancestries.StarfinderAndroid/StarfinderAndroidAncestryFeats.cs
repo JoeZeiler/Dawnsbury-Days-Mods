@@ -2,14 +2,9 @@
 using Dawnsbury.Core.CharacterBuilder.Selections.Options;
 using Dawnsbury.Core.Mechanics.Core;
 using Dawnsbury.Core.Mechanics.Enumerations;
-using System;
-using System.Collections.Generic;
-using System.IO;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
-namespace Dawnsbury.Mods.Ancestries.StarfinderAndroid
+namespace Dawnsbury.Mods.Ancestries.Starfinder
 {
     public static class StarfinderAndroidAncestryFeats
     {
@@ -30,7 +25,7 @@ namespace Dawnsbury.Mods.Ancestries.StarfinderAndroid
                 {
                     qf.AdjustSavingThrowResult = (qfself, action, result) =>
                     {
-                        if (action.Traits.Contains(Trait.Poison) && action.SavingThrow.Defense == Defense.Fortitude)
+                        if (action.Traits.Contains(Trait.Poison))
                         {
                             return result.ImproveByOneStep();
                         }
@@ -47,11 +42,23 @@ namespace Dawnsbury.Mods.Ancestries.StarfinderAndroid
                 {
                     qf.BonusToDefenses = (qfSelf, action, defense) =>
                     {
+                        if(action == null)
+                        {
+                            return null;
+                        }
                         if(action.Traits.Contains(Trait.Emotion) || action.Traits.Contains(Trait.Fear))
                         {
                             return new Bonus(1, BonusType.Circumstance, "Emotionless", true);
                         }
                         return null;
+                    };
+                    qf.AdjustSavingThrowResult = (qfSelf, action, checkResult) =>
+                    {
+                        if ((action.Traits.Contains(Trait.Emotion) || action.Traits.Contains(Trait.Fear)) && checkResult.Equals(CheckResult.Success))
+                        {
+                            return CheckResult.CriticalSuccess;
+                        }
+                        return checkResult;
                     };
                 });
         }
@@ -74,7 +81,15 @@ namespace Dawnsbury.Mods.Ancestries.StarfinderAndroid
                         {
                             return;
                         }
-                        if (action.HasTrait(Trait.Skill) || action.HasTrait(Trait.Deception) || action.HasTrait(Trait.Stealth) || action.HasTrait(Trait.Intimidation))
+                        if (action.HasTrait(Trait.Skill) 
+                        || action.HasTrait(Trait.Deception) || action.HasTrait(Trait.Stealth) || action.HasTrait(Trait.Intimidation) 
+                        || action.Name == "Demoralize" 
+                        || action.Name == "Feint" 
+                        || action.Name == "Trip" 
+                        || action.Name == "Grapple" 
+                        || action.Name == "Disarm" 
+                        || action.Name == "Shove"
+                        || action.Name.Contains("Escape"))
                         {
                             bool useReaction = await target.Battle.AskToUseReaction(qf.Owner, "would you like to use Nanite Surge to give yourself a +2 status bonus to this check?");
                             if (useReaction)
