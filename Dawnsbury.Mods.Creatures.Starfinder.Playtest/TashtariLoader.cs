@@ -150,13 +150,13 @@ namespace Dawnsbury.Mods.Creatures.Starfinder.Playtest
 
             CombatAction BristleFlash = new CombatAction(newCreature, IllustrationName.DazzlingFlash, "Bristle Flash", new[] { Trait.Visual, Trait.Light },
                 "The tashtari causes its filaments to glow with intense light. " +
-                "Non-tashtaris within a 40-foot emanation must attempt a DC 19 Fortitude save. A creature " +
+                "Non-tashtaris within a 40-foot emanation must attempt a {b}DC 19 Fortitude{/b} save. A creature " +
                 "that attempts this save is immune to all Bristle Flashes for 1 minute. The tashtari’s fur " +
                 "loses its glow, and it can’t use this ability until it basks in sunlight for at least 10 minutes." +
-                "\r\nCritical Success: The creature is unaffected." +
-                "\r\nSuccess: The creature is dazzled for 1 round." +
-                "\r\nFailure The creature is dazzled for 1 minute." +
-                "\r\nCritical Failure The creature is blinded for 1 round and dazzled for 1 minute.", BristleFlashTargeting).WithGoodness(brislteGoodness)
+                "\r\n{b}Critical Success{/b} The creature is unaffected." +
+                "\r\n{b}Success{/b} The creature is dazzled for 1 round." +
+                "\r\n{b}Failure{/b} The creature is dazzled for 1 minute." +
+                "\r\n{b}Critical Failure{/b} The creature is blinded for 1 round and dazzled for 1 minute.", BristleFlashTargeting).WithGoodness(brislteGoodness)
             .WithActionCost(1).WithSavingThrow(new SavingThrow(Defense.Fortitude, (c) => 19)).WithProjectileCone(IllustrationName.DazzlingFlash, 8,ProjectileKind.None).WithSoundEffect(SfxName.SprayPerfume)
             .WithEffectOnEachTarget(async (action, user, target, result) =>
             {
