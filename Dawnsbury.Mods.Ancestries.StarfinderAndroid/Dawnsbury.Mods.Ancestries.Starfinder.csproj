@@ -3,4 +3,12 @@
   <PropertyGroup>
     <InstallIntoDevelopmentEnvironment>false</InstallIntoDevelopmentEnvironment>
   </PropertyGroup>
+  <ItemGroup>
+    <None Update="StarfinderAncestryResources\android image.png">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+  </ItemGroup>
+  <Target Name="PostBuild" AfterTargets="PostBuildEvent">
+    <Exec Command="copy /Y &quot;$(TargetDir)$(ProjectName).dll&quot; &quot;$(TargetDir)Workshop Content\CustomMods\$(ProjectName).dll&quot;" />
+  </Target>
 </Project>

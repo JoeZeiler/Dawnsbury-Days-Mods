@@ -21,8 +21,10 @@ namespace Dawnsbury.Mods.Ancestries.Starfinder
         public static Feat CreateCleansingSubroutine()
         {
             return new StarfinderAndroidFeat("Cleansing Subroutine", "Your nanites help purge your body of harmful toxins"
-                , "Each time you successd at a Fortitude save against a poison effect, you improve your saving throw by one step").WithPermanentQEffect((qf) =>
+                , "Each time you attempt a saving throw against a poison effect, you improve your saving throw by one step").WithPermanentQEffect((qf) =>
                 {
+                    qf.Name = "Cleansing Subroutine";
+                    qf.Description = "Each time you attempt a saving throw against a poison effect, you improve your saving throw by one step";
                     qf.AdjustSavingThrowResult = (qfself, action, result) =>
                     {
                         if (action.Traits.Contains(Trait.Poison))
@@ -40,6 +42,8 @@ namespace Dawnsbury.Mods.Ancestries.Starfinder
                 , "You gain a +1 circumstance bonus to saving throws against emotion and fear effects. If you roll a success on a saving throw against an emotion or fear effect, you get a critical success instead.")
                 .WithPermanentQEffect((qf) =>
                 {
+                    qf.Name = "Emotionless";
+                    qf.Description = "You gain a +1 circumstance bonus to saving throws against emotion and fear effects. If you roll a success on a saving throw against an emotion or fear effect, you get a critical success instead.";
                     qf.BonusToDefenses = (qfSelf, action, defense) =>
                     {
                         if(action == null)
@@ -65,19 +69,21 @@ namespace Dawnsbury.Mods.Ancestries.Starfinder
 
         public static Feat CreateNaniteSurge()
         {
-            return new StarfinderAndroidFeat("Nanite Surge", "", "You gain a +2 status bonus to the triggering skill check.")
+            return new StarfinderAndroidFeat("Nanite Surge {icon:Reaction}", "You stimulate your nanites, forcing your body to temporarily increase its efficiency.",
+                "{b}Frequency{/b} once per hour\r\n{b}Trigger{/b} You attempt a skill check.\r\nYou gain a +2 status bonus to the triggering skill check.")
                 .WithPermanentQEffect((qf) =>
                 {
+                    qf.Name = "Nanite Surge {icon:Reaction}";
+                    qf.Description = "{b}Frequency{/b} once per hour\r\n{b}Trigger{/b} You attempt a skill check.\r\nYou gain a +2 status bonus to the triggering skill check.";
                     bool naniteSurgeUsed = false;
 
                     qf.AfterYouTakeAction = async (qfself, action) =>
                     {
                         var newAction = action;
                     };
-
                     qf.BeforeYourActiveRoll = async (qfself, action, target) =>
                     {
-                        if (naniteSurgeUsed || qfself.Owner.QEffects.Any(qf => qf.Name == StarfinderAndroidLoader.NanitesActive.Name))
+                        if (naniteSurgeUsed || qfself.Owner.QEffects.Any(qf => qf.Name == StarfinderAndroidLoader.NanitesActive.Name) || qfself.Owner.Actions.IsReactionUsedUp)
                         {
                             return;
                         }
@@ -94,6 +100,7 @@ namespace Dawnsbury.Mods.Ancestries.Starfinder
                             bool useReaction = await target.Battle.AskToUseReaction(qf.Owner, "would you like to use Nanite Surge to give yourself a +2 status bonus to this check?");
                             if (useReaction)
                             {
+                                qfself.Owner.Actions.UseUpReaction();
                                 naniteSurgeUsed = true;
                                 action.WithActiveRollSpecification(new ActiveRollSpecification(action.ActiveRollSpecification.DetermineBonus.WithExtraBonus((action, caster, target) =>
                                 {
