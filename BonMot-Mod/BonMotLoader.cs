@@ -14,6 +14,7 @@ using System.IO;
 using System.Collections.Generic;
 using Microsoft.Xna.Framework;
 using Dawnsbury.Core;
+using Dawnsbury.Display.Text;
 
 namespace Dawnsbury.Mods.Feats.General.BonMot;
 
@@ -45,7 +46,7 @@ public class BonMotLoader
         //registering the linguistic trait so we can add it to Bon Mot
         Linguistic = ModManager.RegisterTrait(
             "Linguistic",
-            new TraitProperties("Linguistic",true, "Only works on enemies that speak common")
+            new TraitProperties("Linguistic",true, "Only works on enemies that speak Common.")
             );
         ModManager.AddFeat(CreateBonMotFeat(insultDirectory));
     }
@@ -84,7 +85,7 @@ public class BonMotLoader
             }
             sr.Close();
         }
-        catch(IOException ex)
+        catch(IOException)
         {
 
         }
@@ -104,21 +105,20 @@ public class BonMotLoader
         Random rand = new Random(DateTime.Now.GetHashCode());
 
         string[] badInsults = { "Boy are you ugly!", "What an idiot!", "You call yourself a creature!" };
-        string[] terribleInsults = { "I am rubber, you are glue", "I'm shaking, I'm shaking!" };
+        string[] terribleInsults = { "I am rubber, you are glue.", "I'm shaking, I'm shaking!" };
 
+        var description = "{b}Range{/b} 30 feet\n\nRoll a Diplomacy check against the target's Will DC." + S.FourDegreesOfSuccess("The target is distracted and takes a â€“3 status penalty to Perception and Will saves for 1 minute. The target can end the effect early with a retort to your Bon Mot as a single action.", "As critical success, but the penalty is â€“2.", null, "Your quip is atrocious. You take the same penalty an enemy would take had you succeeded. This ends after 1 minute or if you issue another Bon Mot and succeed.");
+        
         return new TrueFeat(
                 FeatName.CustomFeat,
                 1,
                 "You launch an insightful quip at a foe, distracting them.",
-                "Choose a foe within 30 feet and roll a Diplomacy check against the target's Will DC.\n\nCritical Success: The target is distracted and takes a –3 status penalty to Perception and Will saves for 1 minute. " +
-                "The target can end the effect early with a retort to your Bon Mot. This can either be a single action that has the concentrate trait or an appropriate skill action to frame their retort. " +
-                "\r\nSuccess: As critical success, but the penalty is –2." +
-                "\r\nCritical Failure: Your quip is atrocious. You take the same penalty an enemy would take had you succeeded. This ends after 1 minute or if you issue another Bon Mot and succeed.",
+                description,
                 new[] { Trait.Auditory, Trait.Concentrate, Trait.Emotion, Trait.General, Trait.Mental, Trait.Skill, Linguistic })
             .WithActionCost(1)
             .WithCustomName("Bon Mot")
             .WithPrerequisite(C =>
-                C.Proficiencies.Get(Trait.Diplomacy) >= Proficiency.Trained, "Trained in diplomacy")
+                C.Proficiencies.Get(Trait.Diplomacy) >= Proficiency.Trained, "Trained in Diplomacy.")
             .WithOnCreature((sheet, creature) =>
             {
                 creature.AddQEffect(new QEffect("Bon Mot", "You launch an insightful quip at a foe, distracting them.")
@@ -131,12 +131,9 @@ public class BonMotLoader
                         }
 
                         var dude = qfself.Owner;
-                        CombatAction bonmotAction = new CombatAction(dude, CaptainSmirkIllustration!=null?CaptainSmirkIllustration:IllustrationName.QuestionMark, "Bon Mot", new Trait[] { Trait.Auditory, Trait.Concentrate, Trait.Emotion, Trait.General, Trait.Mental, Trait.Skill, Linguistic },
-                            "Choose a foe within 30 feet and roll a Diplomacy check against the target's Will DC.\n\nCritical Success: The target is distracted and takes a –3 status penalty to Perception and Will saves for 1 minute. " +
-                            "The target can end the effect early with a retort to your Bon Mot. This can either be a single action that has the concentrate trait or an appropriate skill action to frame their retort. " +
-                            "\r\nSuccess: As critical success, but the penalty is –2." +
-                            "\r\nCritical Failure: Your quip is atrocious. You take the same penalty an enemy would take had you succeeded. This ends after 1 minute or if you issue another Bon Mot and succeed.",
-                            Target.RangedCreature(6).WithAdditionalConditionOnTargetCreature((caster, target) => target.DoesNotSpeakCommon ? Usability.NotUsableOnThisCreature("Target cannot understand your witty remarks") : Usability.Usable))
+                        CombatAction bonmotAction = new CombatAction(dude, CaptainSmirkIllustration!=null?CaptainSmirkIllustration:IllustrationName.QuestionMark, "Bon Mot", new Trait[] { Trait.Auditory, Trait.Concentrate, Trait.Emotion, Trait.General, Trait.Mental, Trait.Skill, Trait.Basic, Linguistic },
+                            description,
+                            Target.Ranged(6).WithAdditionalConditionOnTargetCreature((caster, target) => target.DoesNotSpeakCommon ? Usability.NotUsableOnThisCreature("target cannot understand your witty remarks") : Usability.Usable))
                             .WithActionCost(1)
                             .WithActiveRollSpecification(
                             new ActiveRollSpecification(Checks.SkillCheck(Skill.Diplomacy), Checks.DefenseDC(Defense.Will)));
@@ -153,7 +150,7 @@ public class BonMotLoader
                                 
                                 if (result == CheckResult.CriticalSuccess)
                                 {
-                                    QEffect bonMotCritEffect = new QEffect("Bon Mot Crit Success", "-3 status penalty to Perception and Will saves", ExpirationCondition.CountsDownAtEndOfYourTurn, caster, DairyBottleIllustration != null? DairyBottleIllustration:IllustrationName.QuestionMark)
+                                    QEffect bonMotCritEffect = new QEffect("Bon Mot Crit Success", "You have a -3 status penalty to Perception and Will saves.", ExpirationCondition.CountsDownAtEndOfYourTurn, caster, DairyBottleIllustration != null? DairyBottleIllustration:IllustrationName.QuestionMark)
                                     {
                                         BonusToDefenses = (qfSelf, incomingEffect, targetedDefense) =>
                                         {
@@ -178,7 +175,7 @@ public class BonMotLoader
                                             //retort removes bon mot debuff with an action, but only if the bon mot creature is within 30 feet, can be seen by the retort user. AI also prioritizes attacking at least once.
                                             return new ActionPossibility(
                                                     new CombatAction(targetDude, GuybrushIllustration != null?GuybrushIllustration:IllustrationName.QuestionMark, "Retort", new Trait[] { Trait.Auditory, Trait.Concentrate, Trait.Mental, Linguistic },
-                                                    "retort to get rid of a Bon Mot debuff", Target.Self((innerSelf, ai) => (ai.Tactic == Tactic.Standard && (innerSelf.Actions.AttackedThisTurn.Any() || (innerSelf.Spellcasting != null)) && innerSelf.DistanceTo(caster) <= 6 && innerSelf.CanSee(caster))
+                                                    "Retort to get rid of a Bon Mot debuff.", Target.Self((innerSelf, ai) => (ai.Tactic == Tactic.Standard && (innerSelf.Actions.AttackedThisTurn.Any() || (innerSelf.Spellcasting != null)) && innerSelf.DistanceTo(caster) <= 6 && innerSelf.CanSee(caster))
                                                     ? AIConstants.EXTREMELY_PREFERRED : AIConstants.NEVER))
                                                     .WithActionCost(1)
                                                     .WithEffectOnSelf(async (innerSelf) =>
@@ -199,7 +196,7 @@ public class BonMotLoader
                                 else if (result == CheckResult.Success)
                                 {
                                     
-                                    QEffect bonMotSuccessEffect = new QEffect("Bon Mot Success", "-2 status penalty to Perception and Will saves", ExpirationCondition.CountsDownAtEndOfYourTurn, caster, DairyBottleIllustration != null ? DairyBottleIllustration : IllustrationName.QuestionMark)
+                                    QEffect bonMotSuccessEffect = new QEffect("Bon Mot Success", "You have a -2 status penalty to Perception and Will saves.", ExpirationCondition.CountsDownAtEndOfYourTurn, caster, DairyBottleIllustration != null ? DairyBottleIllustration : IllustrationName.QuestionMark)
                                     {
                                         BonusToDefenses = (qfSelf, incomingEffect, targetedDefense) =>
                                         {
@@ -224,7 +221,7 @@ public class BonMotLoader
                                             //retort removes bon mot debuff with an action, but only if the bon mot creature is within 30 feet, can be seen by the retort user. AI also prioritizes attacking at least once unless they can cast spells.
                                             return new ActionPossibility(
                                                     new CombatAction(targetDude, GuybrushIllustration != null ? GuybrushIllustration : IllustrationName.QuestionMark, "Retort", new Trait[] { Trait.Auditory, Trait.Concentrate, Trait.Mental, Linguistic },
-                                                    "retort to get rid of a Bon Mot debuff", Target.Self((innerSelf, ai) => (ai.Tactic == Tactic.Standard && (innerSelf.Actions.AttackedThisTurn.Any() || (innerSelf.Spellcasting != null)) && innerSelf.DistanceTo(caster) <= 6 && innerSelf.CanSee(caster))
+                                                    "Retort to get rid of a Bon Mot debuff.", Target.Self((innerSelf, ai) => (ai.Tactic == Tactic.Standard && (innerSelf.Actions.AttackedThisTurn.Any() || (innerSelf.Spellcasting != null)) && innerSelf.DistanceTo(caster) <= 6 && innerSelf.CanSee(caster))
                                                     ? AIConstants.EXTREMELY_PREFERRED : AIConstants.NEVER))
                                                     .WithActionCost(1)
                                                     .WithEffectOnSelf(async (innerSelf) =>
@@ -253,7 +250,7 @@ public class BonMotLoader
                                 {
                                     int failNum = rand.Next(0, 2);
                                     string failString = terribleInsults[failNum];
-                                    caster.AddQEffect(new QEffect("Bon Mot Critical Failure", "-2 status penalty to Perception and Will saves", ExpirationCondition.CountsDownAtEndOfYourTurn, caster, DairyBottleIllustration != null ? DairyBottleIllustration : IllustrationName.QuestionMark)
+                                    caster.AddQEffect(new QEffect("Bon Mot Critical Failure", "You have a -2 status penalty to Perception and Will saves.", ExpirationCondition.CountsDownAtEndOfYourTurn, caster, DairyBottleIllustration != null ? DairyBottleIllustration : IllustrationName.QuestionMark)
                                     {
                                         BonusToDefenses = (qfSelf, incomingEffect, targetedDefense) =>
                                         {

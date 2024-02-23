@@ -11,7 +11,7 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Dawnsbury.Mods.Classes.Star
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MapReaderUtility", "MapReaderUtility\MapReaderUtility.csproj", "{8C836647-7A31-43D9-BDE9-E1AB8663BFB1}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Dawnsbury.Mods.Ancestries.StarfinderAndroid", "Dawnsbury.Mods.Ancestries.StarfinderAndroid\Dawnsbury.Mods.Ancestries.StarfinderAndroid.csproj", "{DD9F7620-ED5F-4018-A125-CD06597D0543}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Dawnsbury.Mods.Ancestries.Starfinder", "Dawnsbury.Mods.Ancestries.StarfinderAndroid\Dawnsbury.Mods.Ancestries.Starfinder.csproj", "{DD9F7620-ED5F-4018-A125-CD06597D0543}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Dawnsbury.Mods.Creatures.Starfinder.Playtest", "Dawnsbury.Mods.Creatures.Starfinder.Playtest\Dawnsbury.Mods.Creatures.Starfinder.Playtest.csproj", "{570AE340-22D1-4A42-9839-6B21CCCA3F3E}"
 EndProject

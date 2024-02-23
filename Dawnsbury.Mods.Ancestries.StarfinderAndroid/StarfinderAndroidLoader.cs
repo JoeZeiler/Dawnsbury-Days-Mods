@@ -1,5 +1,6 @@
 ﻿using Dawnsbury.Core.CharacterBuilder.AbilityScores;
 using Dawnsbury.Core.CharacterBuilder.Feats;
+using Dawnsbury.Core.CharacterBuilder.FeatsDb.Common;
 using Dawnsbury.Core.CharacterBuilder.Selections.Options;
 using Dawnsbury.Core.Creatures;
 using Dawnsbury.Core.Mechanics;
@@ -10,7 +11,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 
-namespace Dawnsbury.Mods.Ancestries.StarfinderAndroid
+namespace Dawnsbury.Mods.Ancestries.Starfinder
 {
     public class StarfinderAndroidLoader
     {
