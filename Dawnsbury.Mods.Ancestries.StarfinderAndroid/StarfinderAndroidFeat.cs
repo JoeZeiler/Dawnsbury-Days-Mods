@@ -6,7 +6,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Dawnsbury.Mods.Ancestries.StarfinderAndroid
+namespace Dawnsbury.Mods.Ancestries.Starfinder
 {
     public class StarfinderAndroidFeat : TrueFeat
     {
