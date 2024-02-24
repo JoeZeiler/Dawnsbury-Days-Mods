@@ -28,7 +28,7 @@ namespace Dawnsbury.Mods.Ancestries.Starfinder
         [DawnsburyDaysModMainMethod]
         public static void LoadMod()
         {
-            NanitesActive = new QEffect("Nanites Active", "The Androids Nanites are currently in use, and cannot be used for other nanite actions, activities, or reactions");
+            NanitesActive = new QEffect("Nanites Active", "The android's nanites are currently in use, and cannot be used for other nanite actions, activities, or reactions.");
             AndroidTrait = ModManager.RegisterTrait("Android", new TraitProperties("Android", true) { IsAncestryTrait = true});
             Tech = ModManager.RegisterTrait("Tech", new TraitProperties("Tech", true, "Incorporates electronics,computer systems, and power sources.", true));
             Radiation = ModManager.RegisterTrait("Radiation", new TraitProperties("Radiation", true, null, true));
@@ -45,7 +45,7 @@ namespace Dawnsbury.Mods.Ancestries.Starfinder
         {
             Feat ConstructedFeat = new Feat(FeatName.CustomFeat, "Your synthetic body resists ailments better than that of a purely biological organism."
                 , "You gain a +1 circumstance bonus to saving throws against diseases, poisons, and radiation.", new List<Trait> { }, null).WithCustomName("Constructed")
-                .WithPermanentQEffect("+1 circumstance bonus to saving throws against diseases, poisons, and radiation.",(qf)=>
+                .WithPermanentQEffect("You have a +1 bonus to saving throws against diseases, poisons, and radiation.",(qf)=>
                 {
                     qf.BonusToDefenses = (qfself, action, defense) =>
                     {
@@ -63,7 +63,7 @@ namespace Dawnsbury.Mods.Ancestries.Starfinder
 
             Feat EmotionallyUnawareFeat = new Feat(FeatName.CustomFeat, "You sometimes find it difficult to process and express complex emotions."
                 , "You take a –1 circumstance penalty to Diplomacy and Performance checks.", new List<Trait> { }, null).WithCustomName("Emotionally Unaware")
-                .WithPermanentQEffect("-1 circumstance penalty to emotion related checks", (qf) =>
+                .WithPermanentQEffect("You have a -1 penalty to emotion-related checks.", (qf) =>
                 {
                     qf.BonusToSkillChecks = (skill, action, creature) =>
                     {
@@ -76,7 +76,7 @@ namespace Dawnsbury.Mods.Ancestries.Starfinder
                     };
                 });
 
-            Feat starfinderAndroid = new AncestrySelectionFeat(FeatName.CustomFeat, "it's an android, but from starfinder", new List<Trait> { Trait.Humanoid, Tech, AndroidTrait }, 8, 5,
+            Feat starfinderAndroid = new AncestrySelectionFeat(FeatName.CustomFeat, "It's an android, but from Starfinder.", new List<Trait> { Trait.Humanoid, Tech, AndroidTrait }, 8, 5,
                 new List<AbilityBoost>()
                 {
                     new EnforcedAbilityBoost(Ability.Dexterity),
@@ -107,7 +107,7 @@ namespace Dawnsbury.Mods.Ancestries.Starfinder
                 .WithCustomName("Skill Specifications");
             yield return new HeritageSelectionFeat(FeatName.CustomFeat,
                 "Your body was originally forged for combat, likely created to function as a security officer or soldier.",
-                "you are trained in all simple and martial weapons")
+                "You are trained in all simple and martial weapons.")
                 .WithOnSheet(sheet =>
                 {
                     sheet.SetProficiency(Trait.Simple, Proficiency.Trained);

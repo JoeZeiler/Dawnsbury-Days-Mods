@@ -10,7 +10,7 @@ namespace Dawnsbury.Mods.Ancestries.Starfinder
     {
         public static Feat CreateSkillProgramming()
         {
-            return new StarfinderAndroidFeat("Skill Programming", "You were programmed with extra skill training or found a way to download programming to improve your skills.", "You become trained in two additional skills")
+            return new StarfinderAndroidFeat("Skill Programming", "You were programmed with extra skill training or found a way to download programming to improve your skills.", "You become trained in two additional skills.")
             .WithOnSheet((sheet) =>
             {
                 sheet.AddSelectionOption(new SingleFeatSelectionOption("Skill Programming", "Skill Programming skill", 1, (Feat feat) => feat is SkillSelectionFeat));
@@ -20,11 +20,11 @@ namespace Dawnsbury.Mods.Ancestries.Starfinder
 
         public static Feat CreateCleansingSubroutine()
         {
-            return new StarfinderAndroidFeat("Cleansing Subroutine", "Your nanites help purge your body of harmful toxins"
-                , "Each time you attempt a saving throw against a poison effect, you improve your saving throw by one step").WithPermanentQEffect((qf) =>
+            return new StarfinderAndroidFeat("Cleansing Subroutine", "Your nanites help purge your body of harmful toxins."
+                , "Each time you attempt a saving throw against a poison effect, you improve your saving throw by one step.").WithPermanentQEffect((qf) =>
                 {
                     qf.Name = "Cleansing Subroutine";
-                    qf.Description = "Each time you attempt a saving throw against a poison effect, you improve your saving throw by one step";
+                    qf.Description = "Each time you attempt a saving throw against a poison effect, you improve your saving throw by one step.";
                     qf.AdjustSavingThrowResult = (qfself, action, result) =>
                     {
                         if (action.Traits.Contains(Trait.Poison))
@@ -97,7 +97,7 @@ namespace Dawnsbury.Mods.Ancestries.Starfinder
                         || action.Name == "Shove"
                         || action.Name.Contains("Escape"))
                         {
-                            bool useReaction = await target.Battle.AskToUseReaction(qf.Owner, "would you like to use Nanite Surge to give yourself a +2 status bonus to this check?");
+                            bool useReaction = await target.Battle.AskToUseReaction(qf.Owner, "Would you like to use Nanite Surge to give yourself a +2 status bonus to this check?");
                             if (useReaction)
                             {
                                 qfself.Owner.Actions.UseUpReaction();

@@ -46,9 +46,9 @@ public class StarfinderSoldierLoader
 
         SuppressedIllustration = new ModdedIllustration(@"StarfinderSoldierResources\Suppressed.png");
 
-        FearsomeBulwarkFeat = new Feat(FeatName.CustomFeat, "Fearsome Bulwark", "You can use your Constitution modifier instead of your Charisma modifier on Intimidation checks, this does not show up on your character sheet", new List<Trait>(), new List<Feat>()).WithOnCreature((creature) =>
+        FearsomeBulwarkFeat = new Feat(FeatName.CustomFeat, "Fearsome Bulwark", "You can use your Constitution modifier instead of your Charisma modifier on Intimidation checks (this does not show up on your character sheet).", new List<Trait>(), new List<Feat>()).WithOnCreature((creature) =>
         {
-            creature.AddQEffect(new QEffect("Fearsome Bulwark", "You can use your Constitution modifier instead of your Charisma modifier on Intimidation checks, this does not show up on your character sheet.")
+            creature.AddQEffect(new QEffect("Fearsome Bulwark", "You can use your Constitution modifier instead of your Charisma modifier on Intimidation checks (this does not show up on your character sheet).")
             {
                 BonusToSkillChecks = (skill, combatAction, creature) =>
                 {
@@ -83,13 +83,13 @@ public class StarfinderSoldierLoader
     /// <returns>the Soldier class selection feat</returns>
     private static Feat GenerateClassSelectionFeat()
     {
-        var soldierSelection = new ClassSelectionFeat(FeatName.CustomFeat, "master of area weapons, heavy armor, and taking punishment.", SoldierTrait,
+        var soldierSelection = new ClassSelectionFeat(FeatName.CustomFeat, "Master of area weapons, heavy armor, and taking punishment.", SoldierTrait,
             new EnforcedAbilityBoost(Ability.Constitution), 10, new[] { Trait.Perception, Trait.Reflex, Trait.Simple, Trait.Martial, Trait.Unarmed, Trait.UnarmoredDefense, Trait.LightArmor, Trait.MediumArmor, Trait.HeavyArmor },
-            new[] { Trait.Fortitude, Trait.Will }, 4, "1. Suppressing Fire:  Creatures in the affected area who fail their save against your attack become suppressed until the start of your next turn." +
-            "\r\n2. Primary Target: You may choose a primary target, if they are the closest creature to the area origin point of an area attack, you may also make a strike against that creature as part of that attack." +
-            "\r\n3. Fighting Style: As a soldier, you applied yourself to a specific style of combat. Your style determines how you tend to approach combat and how you take advantage of your ability to suppress targets." +
-            "\r\n4. WalkingArmory: When determining your Strength threshold for using medium or heavy armor, you can instead choose to use your Constitution modifier." +
-            "\r\nAt Later Levels:\r\n\r\n Level 3:\r\n1. Fearsome Bulwark: You can use your Constitution modifier instead of your Charisma modifier on Intimidation checks.", GenerateSoldierSubclasses()).WithCustomName("Soldier").WithOnCreature((creature)=>
+            new[] { Trait.Fortitude, Trait.Will }, 4, "{b}1. Suppressing Fire.{/b} Creatures who fail their save against your area attack from an area weapon become Suppressed until the start of your next turn." +
+            "\n\n{b}2. Primary Target.{/b} You may choose a primary target. If they are the closest creature to the area origin point of an area attack, you may also make a Strike against that creature as part of that attack." +
+            "\n\n{b}3. Fighting Style.{/b} As a Soldier, you applied yourself to a specific style of combat. Your style determines how you tend to approach combat and how you take advantage of your ability to suppress targets." +
+            "\n\n{b}4. Walking Armory.{/b} When determining your Strength threshold for using medium or heavy armor, you can instead choose to use your Constitution modifier." +
+            "\n\n{b}At higher levels:{/b}\n{b}Level 3:{/b} Fearsome Bulwark (you can use your Constitution modifier instead of your Charisma modifier on Intimidation checks)", GenerateSoldierSubclasses()).WithCustomName("Soldier").WithOnCreature((creature)=>
             {
                 SetupPrimaryTarget(creature);
                 SetupSoldierSuppression(creature);
@@ -97,7 +97,7 @@ public class StarfinderSoldierLoader
             }).WithOnSheet(sheet =>
             {
                 sheet.AddAtLevel(3, (values) => { values.AddFeat(FearsomeBulwarkFeat, null); });
-                sheet.AddSelectionOption(new SingleFeatSelectionOption("level1SoldierFeat", "Soldier Feat", 1, (feat) => feat.HasTrait(SoldierTrait) && feat is TrueFeat && ((TrueFeat)feat).Level == 1));
+                sheet.AddSelectionOption(new SingleFeatSelectionOption("level1SoldierFeat", "Soldier feat", 1, (feat) => feat.HasTrait(SoldierTrait) && feat is TrueFeat && ((TrueFeat)feat).Level == 1));
             });
         return soldierSelection;
     }
@@ -108,7 +108,7 @@ public class StarfinderSoldierLoader
     /// <param name="creature">the creature to add walking armory to</param>
     private static void SetupWalkingArmory(Creature creature)
     {
-        creature.AddQEffect(new QEffect("WalkingArmory","When determining your Strength threshold for using medium or heavy armor, you can instead choose to use your Constitution modifier.")
+        creature.AddQEffect(new QEffect("Walking Armory","When determining your Strength threshold for using medium or heavy armor, you can instead choose to use your Constitution modifier.")
         {
             StateCheck = (qfSelf)=>
             {
@@ -129,7 +129,7 @@ public class StarfinderSoldierLoader
         Creature actionOwner = creature;
         Creature mainTarget = null;
         creature.AddQEffect(
-        new QEffect("Primary Target", "You may choose a primary target, if they are the closest creature to the area origin point of an area attack, you may also make a strike against that creature as part of that attack.")
+        new QEffect("Primary Target", "You may choose a primary target. If they are the closest creature to the area origin point of an area attack, you may also make a Strike against that creature as part of that attack.")
         {
             //provides the free action to seelct a primary target
             StateCheck = (qfSelf) =>
@@ -144,8 +144,8 @@ public class StarfinderSoldierLoader
                             Creature thisCreature = actionOwner;
                             var addedText = (mainTarget != null ? "\n[currently: " + mainTarget.Name + "]" : string.Empty);
                             CombatAction SetPrimaryTarget = new CombatAction(actionOwner, IllustrationName.TrueStrike, "Select Primary Target" + addedText, new Trait[] { Trait.AlwaysHits, Trait.IsNotHostile, Trait.DoesNotBreakStealth },
-                                 "Select a foe, as long as they are the closest creature to the center of a Burst area fire or the closest creature to you when using a a cone or line area fire, you will also attempt to strike that creature.",
-                                 Target.RangedCreature(100).WithAdditionalConditionOnTargetCreature((caster, target) => target.FriendOf(caster) ? Usability.NotUsableOnThisCreature("cannot choose ally as primary target.") : Usability.Usable))
+                                 "Select a foe. As long as they are the closest creature to the center of a burst area fire or the closest creature to you when using a a cone or line area fire, you will also attempt to Strike that creature.",
+                                 Target.RangedCreature(100).WithAdditionalConditionOnTargetCreature((caster, target) => target.FriendOf(caster) ? Usability.NotUsableOnThisCreature("ally") : Usability.Usable))
                                  .WithActionCost(0)
                                 .WithEffectOnEachTarget(async (spell, caster, target, result) =>
                                 {
@@ -286,7 +286,7 @@ public class StarfinderSoldierLoader
     /// <param name="creature">the creature to add the ability to supress to.</param>
     private static void SetupSoldierSuppression(Creature creature)
     {
-        creature.AddQEffect(new QEffect("Suppressing Fire", "Creatures in the affected area who fail their save against your attack become suppressed until the start of your next turn.")
+        creature.AddQEffect(new QEffect("Suppressing Fire", "Creatures in the affected area who fail their save against your area attack become Suppressed until the start of your next turn.")
         {
             AfterYouTakeHostileAction = (qfSelf, action) =>
             {
@@ -309,9 +309,9 @@ public class StarfinderSoldierLoader
                     var result = chosen.CheckResults[chosenTarget];
                     if (result == CheckResult.Failure || result == CheckResult.CriticalFailure || (result == CheckResult.Success && action.Owner.Traits.Contains(BombardTechnical)))
                     {
-                        if (chosenTarget.QEffects.Any(ef => ef.Name == "Supressed"))
+                        if (chosenTarget.QEffects.Any(ef => ef.Name == "Suppressed"))
                         {
-                            chosenTarget.RemoveAllQEffects(ef => ef.Name == "Supressed");
+                            chosenTarget.RemoveAllQEffects(ef => ef.Name == "Suppressed");
                         }
                         chosenTarget.AddQEffect(SoldierStatusEffects.GenerateSupressedEffect(action.Owner).WithExpirationAtStartOfSourcesTurn(action.Owner, 1));
                     }
@@ -330,12 +330,12 @@ public class StarfinderSoldierLoader
         {
             new SoldierFightingStyleFeat(
             "Armor Storm",
-            "Your armor is like an extension of your skin (or other appropriate surface layer), and you’re able to leverage it alongside the heavy weapons you employ. Foes you suppress quickly stumble while attempting to overcome your durability, granting you an edge in\r\nabsorbing their incoming firepower. You likely move to the forefront and try to focus your enemy’s attention on yourself.",
-            "You never count as being in the area of a ranged weapon you’ve made an attack with. In addition, you gain resistance equal to half your level (minimum 1) against attacks made from suppressed targets.",
+            "Your armor is like an extension of your skin (or other appropriate surface layer), and you're able to leverage it alongside the heavy weapons you employ. Foes you suppress quickly stumble while attempting to overcome your durability, granting you an edge in absorbing their incoming firepower. You likely move to the forefront and try to focus your enemy's attention on yourself.",
+            "You never count as being in the area of a ranged weapon you've made an attack with. In addition, you gain resistance equal to half your level (minimum 1) against attacks made from suppressed targets.",
             new List<Trait>(),null).WithOnCreature((sheet, creature) =>
             {
                 creature.Traits.Add(ArmorStormTechnical);
-                creature.AddQEffect(new QEffect("Armor Storm","You never count as being in the area of a ranged weapon you’ve made an attack with. In addition, you gain resistance equal to half your level (minimum 1) against attacks made from suppressed targets.")
+                creature.AddQEffect(new QEffect("Armor Storm","You never count as being in the area of a ranged weapon you've made an attack with. In addition, you gain resistance equal to half your level (minimum 1) against attacks made from suppressed targets.")
                 {
                     AdjustSavingThrowResult = (qfSelf, action, result) =>
                     {
@@ -349,9 +349,9 @@ public class StarfinderSoldierLoader
                     {
                         Task<DamageModification> damageModTask = new Task<DamageModification>(() =>
                         {
-                            if (attacker.QEffects.Any((qft)=>qft.Name == "Supressed"))
+                            if (attacker.QEffects.Any((qft)=>qft.Name == "Suppressed"))
                             {
-                                return new ReduceDamageModification(Math.Max(Math.Max(self.Level / 2, 1) - self.WeaknessAndResistance.Resistances.FirstOrDefault(r => r.DamageKind == dStuff.Kind, new Resistance(DamageKind.Chaotic, 0)).Value, 0), "Resistance equal to 1/2 level (minimum 1) against supressed targets");
+                                return new ReduceDamageModification(Math.Max(Math.Max(self.Level / 2, 1) - self.WeaknessAndResistance.Resistances.FirstOrDefault(r => r.DamageKind == dStuff.Kind, new Resistance(DamageKind.Chaotic, 0)).Value, 0), "Resistance equal to 1/2 level (minimum 1) against suppressed targets");
                             }
                             else
                             {
@@ -365,12 +365,12 @@ public class StarfinderSoldierLoader
             }),
              new SoldierFightingStyleFeat(
             "Bombard",
-            "There’s nothing like a reliable heavy gun (or maybe several different types of heavy guns) to get you through the tough times of adventuring in space. You’ve come to terms with the fact that your weapons might sometimes hit your allies but work to minimize such instances of unintentional “friendly fire.” In fact, you’ve honed your skill with heavy weapons so much that all but the most indirect of strikes causes your opponents to duck down or force them to adapt to the havoc you unleash.",
-            "When you attack with an area weapon, you adjust the shot to allow allies to better avoid it. Your allies are not affected by your area attacks. In addition, enemies who succeed (but not critically succeed) their save against an area attack you make are still suppressed until the start of your next turn.",
+            "There's nothing like a reliable heavy gun (or maybe several different types of heavy guns) to get you through the tough times of adventuring in space. You've come to terms with the fact that your weapons might sometimes hit your allies but work to minimize such instances of unintentional \"friendly fire.\" In fact, you've honed your skill with heavy weapons so much that all but the most indirect of strikes causes your opponents to duck down or force them to adapt to the havoc you unleash.",
+            "When you attack with an area weapon, you adjust the shot to allow allies to better avoid it. Your allies are not affected by your area attacks. In addition, enemies who succeed (but not critically succeed) their save against an area attack you make are still Suppressed until the start of your next turn.",
             new List<Trait>(),null).WithOnCreature((sheet, creature) =>
             {
                 creature.Traits.Add(BombardTechnical);
-                creature.AddQEffect(new QEffect("Bombard","When you attack with an area weapon, you adjust the shot to allow allies to better avoid it. Your allies are not affected by your area attacks. In addition, enemies who succeed (but not critically succeed) their save against an area attack you make are still suppressed until the start of your next turn.")
+                creature.AddQEffect(new QEffect("Bombard","When you attack with an area weapon, you adjust the shot to allow allies to better avoid it. Your allies are not affected by your area attacks. In addition, enemies who succeed (but not critically succeed) their save against an area attack you make are still Suppressed until the start of your next turn.")
                 {
                     StartOfCombat = (qfSelf) =>
                     {
