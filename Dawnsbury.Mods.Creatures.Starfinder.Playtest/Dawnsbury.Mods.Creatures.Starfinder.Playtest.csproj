@@ -8,13 +8,22 @@
     <None Update="CustomMaps\StarfinderCreaturesTileset.tsx">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
-    <None Update="CustomMaps\Tashtari.png">
+    <None Update="CustomMaps\StarfinderCreatures\Tashtari.png">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Update="CustomMaps\StarfinderCreatures\TashtariAlpha.png">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
     <None Update="CustomMaps\TashtariCave.tmx">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
+    <None Update="CustomMaps\TashtariRevenge.tmx">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
     <None Update="StarfinderCreaturesResources\Tashtari.png">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Update="StarfinderCreaturesResources\TashtariAlpha.png">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
   </ItemGroup>
