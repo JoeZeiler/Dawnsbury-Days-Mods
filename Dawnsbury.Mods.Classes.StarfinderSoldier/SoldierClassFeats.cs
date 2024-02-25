@@ -32,7 +32,7 @@ namespace Dawnsbury.Mods.Classes.StarfinderSoldier
         public static Feat CreatePinDown()
         {
             return new SoldierFeat("Pin-Down", 1, "",
-            "Requirements Your last action was an attack with an area weapon. Select one creature that was in the area of effect of your prior attack. That creature must make a save against your attack again. This effect deals no damage but can inflict the suppressed condition on a target who previously saved against it."
+            "{b}Requirements{/b} Your last action was an attack with an area weapon.\n\nSelect one creature that was in the area of effect of your last attack. That creature must make a save against your attack again. This effect deals no damage but can inflict the Suppressed condition on a target who previously saved against it."
             , new[] { StarfinderSoldierLoader.SoldierTrait, Trait.ClassFeat }).WithActionCost(1).WithOnCreature((creature) =>
             {
                 CombatAction areaAction = null;
@@ -68,20 +68,20 @@ namespace Dawnsbury.Mods.Classes.StarfinderSoldier
                                 ProvideMainAction = (qfSelf) =>
                                 {
                                     CombatAction pinDownAction = new CombatAction(creature, IllustrationName.TakeCover, "Pin-Down", new[] { StarfinderSoldierLoader.SoldierTrait, }
-                                    , "Select one creature that was in the area of effect of your prior attack. That creature must make a save against your attack again. This effect deals no damage but can inflict the suppressed condition on a target who previously saved against it."
+                                    , "Select one creature that was in the area of effect of your last attack. That creature must make a save against your attack again. This effect deals no damage but can inflict the Suppressed condition on a target who previously saved against it."
                                     , CreatureTarget.Distance(100).WithAdditionalConditionOnTargetCreature((caster, defender) =>
                                     {
                                         if (defender == null)
                                         {
-                                            return Usability.NotUsable("no target chosen");
+                                            return Usability.NotUsable("No target chosen.");
                                         }
                                         if (!pastAction.ChosenTargets.ChosenCreatures.Contains(defender))
                                         {
-                                            return Usability.NotUsableOnThisCreature("Target not in area of last attack");
+                                            return Usability.NotUsableOnThisCreature("target not in area of last attack");
                                         }
                                         if (defender.DeathScheduledForNextStateCheck)
                                         {
-                                            return Usability.NotUsableOnThisCreature("Target about to die");
+                                            return Usability.NotUsableOnThisCreature("target about to die");
                                         }
                                         return Usability.Usable;
                                     })).WithActionCost(1).WithSavingThrow(new SavingThrow(Defense.Reflex, (creature) =>
@@ -92,9 +92,9 @@ namespace Dawnsbury.Mods.Classes.StarfinderSoldier
                                     {
                                         if (result == CheckResult.Failure || result == CheckResult.CriticalFailure)
                                         {
-                                            if (target.QEffects.Any(ef => ef.Name == "Supressed"))
+                                            if (target.QEffects.Any(ef => ef.Name == "Suppressed"))
                                             {
-                                                target.RemoveAllQEffects(ef => ef.Name == "Supressed");
+                                                target.RemoveAllQEffects(ef => ef.Name == "Suppressed");
                                             }
                                             target.AddQEffect(SoldierStatusEffects.GenerateSupressedEffect(caster).WithExpirationAtStartOfSourcesTurn(caster, 1));
                                         }
@@ -121,13 +121,13 @@ namespace Dawnsbury.Mods.Classes.StarfinderSoldier
         public static Feat QuickSwapFeat()
         {
             return new SoldierFeat("Quick-Swap", 1, "",
-            "Trigger You are wielding a two-handed weapon and a hostile creature moves adjacent to you. If you are wielding a two handed ranged weapon, you stow your current weapon and draw the first two-handed melee weapon in your inventory. If you are wielding a two handed melee weapon, you instead stow your current weapon and draw the first two handed range weapon in your inventory."
+            "{b}Trigger{/b} You are wielding a two-handed weapon and a hostile creature moves adjacent to you. If you are wielding a two-handed ranged weapon, you stow your current weapon and draw the first two-handed melee weapon in your inventory. If you are wielding a two-handed melee weapon, you instead stow your current weapon and draw the first two-handed ranged weapon in your inventory."
             , new[] { StarfinderSoldierLoader.SoldierTrait, Trait.ClassFeat }).WithOnCreature((creature) =>
             {
                 Creature lastCreatureToAct = null;
                 int lastActionsLeft= 4;
                 bool alreadyAsked = false;
-                creature.AddQEffect(new QEffect("Quick-Swap", "Trigger You are wielding a two-handed weapon and a hostile creature moves adjacent to you. If you are wielding a two handed ranged weapon, you stow your current weapon and draw the first two-handed melee weapon in your inventory. If you are wielding a two handed melee weapon, you instead stow your current weapon and draw the first two handed range weapon in your inventory.")
+                creature.AddQEffect(new QEffect("Quick-Swap", "When you are wielding a two-handed weapon and a hostile creature moves adjacent to you, you can swap a two-handed melee weapon in your hand for a two-handed ranged weapon in your inventory or vice versa.")
                 {
                     //when a creature first moves within 5 feet of this creature, find the first two-handed melee (if carrying ranged) or ranged (if carrying melee) weapon in inventory.
                     //ask player if they want to switch to that weapon, if yes, switch the held weapon.
@@ -198,7 +198,7 @@ namespace Dawnsbury.Mods.Classes.StarfinderSoldier
                                 return;
                             }
 
-                            ConfirmationRequest req = new ConfirmationRequest(creature, "Would you like to swap to " + swapToItem.Name + "?", IllustrationName.Reaction, "yes", "no");
+                            ConfirmationRequest req = new ConfirmationRequest(creature, "Would you like to swap to " + swapToItem.Name + "?", IllustrationName.Reaction, "Yes", "Pass");
 
                             //req.PassByButtonText = "passing";
                             alreadyAsked = true;
@@ -228,7 +228,9 @@ namespace Dawnsbury.Mods.Classes.StarfinderSoldier
         {
             return new SoldierFeat("Menacing Laughter", 2, "",
             "Attempt Intimidation checks to Demoralize each creature within 30 feet who you suppressed this turn."
-            , new[] { StarfinderSoldierLoader.SoldierTrait, Trait.ClassFeat }).WithOnCreature((creature) =>
+            , new[] { StarfinderSoldierLoader.SoldierTrait, Trait.ClassFeat })
+                .WithActionCost(1)
+                .WithOnCreature((creature) =>
             {
                 creature.AddQEffect(new QEffect()
                 {
@@ -247,7 +249,7 @@ namespace Dawnsbury.Mods.Classes.StarfinderSoldier
                             {
                                 return false;
                             }
-                            if (creature.QEffects.Any(q => q.Source == self && q.Name == "Supressed"))
+                            if (creature.QEffects.Any(q => q.Source == self && q.Name == "Suppressed"))
                             {
                                 return true;
                             }
@@ -277,7 +279,7 @@ namespace Dawnsbury.Mods.Classes.StarfinderSoldier
         public static Feat RelentlessEnduranceFeat()
         {
             return new SoldierFeat("Relentless Endurance", 2, "",
-            "Trigger You take damage.\r\nFrequency once per encounter\r\nYou come back stronger. You gain 1d8+4 temporary Hit Points that last for the encounter."
+            "{b}Trigger{/b} You take damage.\r\n{b}Frequency{/b} once per encounter\n\nYou come back stronger. You gain 1d8+4 temporary Hit Points that last for the rest of the encounter."
             , new[] { StarfinderSoldierLoader.SoldierTrait, Trait.ClassFeat }).WithOnCreature((creature) =>
             {
                 bool enduranceUsed = false;
@@ -287,7 +289,7 @@ namespace Dawnsbury.Mods.Classes.StarfinderSoldier
                 {
                     if (!enduranceUsed && creature.Actions.CanTakeReaction() && amount > 0)
                     {
-                        ConfirmationRequest req = new ConfirmationRequest(creature, "Would you like to use Relentless Endurance to gain 1d8+4 temporary HP?", IllustrationName.Reaction, "yes", "no");
+                        ConfirmationRequest req = new ConfirmationRequest(creature, "Would you like to use Relentless Endurance to gain 1d8+4 temporary HP?", IllustrationName.Reaction, "Yes", "Pass");
 
                         var enduranceResult = (await creature.Battle.SendRequest(req)).ChosenOption;
                         if (enduranceResult is ConfirmOption)
@@ -300,7 +302,7 @@ namespace Dawnsbury.Mods.Classes.StarfinderSoldier
                     }
                 }
 
-                creature.AddQEffect(new QEffect("Relentless Endurance", "Trigger You take damage.\r\nFrequency once per encounter\r\nYou come back stronger. You gain 1d8+4 temporary Hit Points that last for the encounter.")
+                creature.AddQEffect(new QEffect("Relentless Endurance", "When you take damage, once per encounter, you gain 1d8+4 temporary Hit Points.")
                 {
                     //makes sure the feat can be used only once per combat
                     StartOfCombat = async (qfself) =>
@@ -333,10 +335,10 @@ namespace Dawnsbury.Mods.Classes.StarfinderSoldier
                             {
                                 return null;
                             }
-                            if(target.QEffects.Any(fx=>fx.Name == "Supressed"))
+                            if(target.QEffects.Any(fx=>fx.Name == "Suppressed"))
                             {
                                 var num = Math.Min(creature.Actions.AttackedThisManyTimesThisTurn, 2);
-                                return new Bonus(num, BonusType.Untyped, "Overwhelming Assault Multiple Attack Penalty Reduction");
+                                return new Bonus(num, BonusType.Untyped, "Overwhelming Assault multiple attack penalty reduction");
                             }
                             return null;
                         }
@@ -351,12 +353,14 @@ namespace Dawnsbury.Mods.Classes.StarfinderSoldier
         public static Feat PunishingSalvoFeat()
         {
             return new SoldierFeat("Punishing Salvo", 4, "",
-                "Requirements Your last action this turn was a primary target Strike.\r\nYou can make a second Strike against your primary target, ignoring the effect of the unwieldy trait that prevents additional attacks. This doesn’t make a new area attack and is instead treated as just a single Strike against the target made using the primary target rules.",
-                new[] { StarfinderSoldierLoader.SoldierTrait, Trait.ClassFeat }).WithOnCreature((creature) => 
+                "{b}Requirements{/b} Your last action this turn was a primary target Strike.\r\nYou can make a second Strike against your primary target, ignoring the effect of the unwieldy trait that prevents additional attacks. This doesn't make a new area attack and is instead treated as just a single Strike against the target made using the primary target rules.",
+                new[] { StarfinderSoldierLoader.SoldierTrait, Trait.ClassFeat })
+                .WithActionCost(1)
+                .WithOnCreature((creature) => 
                 {
                     Item lastActionPrimStrikeWeapon = null;
                     Creature strikedCreature = null;
-                    creature.AddQEffect(new QEffect("Punishing Salvo", "Requirements Your last action this turn was a primary target Strike.\r\nYou can make a second Strike against your primary target, ignoring the effect of the unwieldy trait that prevents additional attacks. This doesn’t make a new area attack and is instead treated as just a single Strike against the target made using the primary target rules.")
+                    creature.AddQEffect(new QEffect("Punishing Salvo", "{b}Requirements{/b} Your last action this turn was a primary target Strike.\n\nYou can make a second Strike against your primary target, ignoring the effect of the unwieldy trait that prevents additional attacks. This doesn't make a new area attack and is instead treated as just a single Strike against the target made using the primary target rules.")
                     {
                         //if the last action you took was to attempt to strike a primary target, enable the punishing salvo action
                         AfterYouTakeHostileAction = (qfself,action) =>
@@ -397,7 +401,7 @@ namespace Dawnsbury.Mods.Classes.StarfinderSoldier
                                         var strikeTraits = areaItem.Traits;
                                         strikeTraits.Add(StarfinderSoldierLoader.SoldierTrait);
                                         var punishSalvo = new CombatAction(creature, IllustrationName.TrueStrike, "Punishing Salvo", strikeTraits.ToArray(),
-                                            "make a second Strike against the primary target of your last area attack, ignoring the effect of the unwieldy trait that prevents additional attacks.",
+                                            "Make a second Strike against the primary target of your last area attack, ignoring the effect of the unwieldy trait that prevents additional attacks.",
                                             Target.Ranged(areaItem.WeaponProperties.RangeIncrement * 5).WithAdditionalConditionOnTargetCreature((creature, target) =>
                                             {
                                                 return target == targetCreature ? Usability.Usable : Usability.NotUsableOnThisCreature("not the primary target of last area attack");

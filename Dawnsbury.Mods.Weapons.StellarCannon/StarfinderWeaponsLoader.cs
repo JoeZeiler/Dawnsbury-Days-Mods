@@ -50,14 +50,14 @@ public partial class StarfinderWeaponsLoader
     [DawnsburyDaysModMainMethod]
     public static void LoadMod()
     {
-        Analogue = ModManager.RegisterTrait("Analogue", new TraitProperties("Analogue", true, "Does not rely on digital technology.")); Tech = ModManager.RegisterTrait("Tech", new TraitProperties("Tech", true, "Incorporates electronics,computer systems, and power sources.", true));
-        Unwieldy = ModManager.RegisterTrait("Unwieldy", new TraitProperties("Unwieldy", true, "You can’t use an unwieldy weapon more than once per round and can’t use it to Strike as part of a reaction",true));
-        AreaBurst10ft = ModManager.RegisterTrait("AreaBurst10ft", new TraitProperties("Area (Burst 10 ft.)", true, "Weapons with this trait can only fire using the Area Fire action. The DC is equal to 10 + your attack bonus with this weapon using strength or constitution (except expert proficiency is treated as trained).", true));
-        AreaCone = ModManager.RegisterTrait("AreaCone", new TraitProperties("Area (Cone)", true, "Weapons with this trait can only fire using the Area Fire action. The DC is equal to 10 + your attack bonus with this weapon using strength or constitution (except expert proficiency is treated as trained).", true));
-        AreaLine = ModManager.RegisterTrait("AreaLine", new TraitProperties("Area (Line)", true, "Weapons with this trait can only fire using the Area Fire action. The DC is equal to 10 + your attack bonus with this weapon using strength or constitution (except expert proficiency is treated as trained).", true));
-        Concussive = ModManager.RegisterTrait("Concussive", new TraitProperties("Concussive", true, "Use the weaker of the target’s resistance or immunity\r\nto piercing or to bludgeoning."));
+        Analogue = ModManager.RegisterTrait("Analogue", new TraitProperties("Analogue", true, "Does not rely on digital technology.")); Tech = ModManager.RegisterTrait("Tech", new TraitProperties("Tech", true, "Incorporates electronics, computer systems, and power sources.", true));
+        Unwieldy = ModManager.RegisterTrait("Unwieldy", new TraitProperties("Unwieldy", true, "You can't use an unwieldy weapon more than once per round and can't use it to Strike as part of a reaction.",true));
+        AreaBurst10ft = ModManager.RegisterTrait("AreaBurst10ft", new TraitProperties("Area (Burst 10 ft.)", true, "Weapons with this trait can only fire using the Area Fire action. The DC is equal to 10 + your attack bonus with this weapon using Strength or Constitution (except that expert proficiency is treated as trained).", true));
+        AreaCone = ModManager.RegisterTrait("AreaCone", new TraitProperties("Area (Cone)", true, "Weapons with this trait can only fire using the Area Fire action. The DC is equal to 10 + your attack bonus with this weapon using Strength or Constitution (except that expert proficiency is treated as trained).", true));
+        AreaLine = ModManager.RegisterTrait("AreaLine", new TraitProperties("Area (Line)", true, "Weapons with this trait can only fire using the Area Fire action. The DC is equal to 10 + your attack bonus with this weapon using Strength or Constitution (except that expert proficiency is treated as trained).", true));
+        Concussive = ModManager.RegisterTrait("Concussive", new TraitProperties("Concussive", true, "Use the weaker of the target's resistance or immunity to piercing or to bludgeoning."));
         Area = ModManager.RegisterTrait("Area", new TraitProperties("Area", true, "The effect happens in a targeted area.", true));
-        Automatic = ModManager.RegisterTrait("Automatic", new TraitProperties("Automatic", true, "Can use the 'Automatic Fire' action.The DC is equal to 10 + your attack bonus with this weapon using strength, constitution, or dexterity (except expert proficiency is treated as trained).", true));
+        Automatic = ModManager.RegisterTrait("Automatic", new TraitProperties("Automatic", true, "Can use the 'Automatic Fire' action. The DC is equal to 10 + your attack bonus with this weapon using Strength, Constitution, or Dexterity (except that expert proficiency is treated as trained).", true));
         AutomaticTechnical = ModManager.RegisterTrait("AutomaticTechnical", new TraitProperties("AutomaticTechnical", false));
         AreaTechnical = ModManager.RegisterTrait("AreaTech", new TraitProperties("AreaTechnical", false));
         Gun = ModManager.RegisterTrait("Gun", new TraitProperties("Gun", true, "Fires projectiles and has a magazine.", false));
@@ -292,7 +292,7 @@ public partial class StarfinderWeaponsLoader
                 {
                     if (((EphemeralAreaProperties)gunItem.EphemeralItemProperties).CurrentMagazine < gunItem.Usage)
                     {
-                        return "Not Enough Ammo Loaded.";
+                        return "Not enough ammo loaded.";
                     }
                 }
                 return null;
@@ -306,7 +306,7 @@ public partial class StarfinderWeaponsLoader
             {
                 ProvideMainAction = (qfSelf) =>
                 {
-                    CombatAction reloadAction = new CombatAction(itemOwner, gunItem.Illustration, "Reload " + gunItem.Name, new[] { Trait.Interact }, "interact to reload", Target.Self()).WithActionCost(gunItem.Reload)
+                    CombatAction reloadAction = new CombatAction(itemOwner, gunItem.Illustration, "Reload " + gunItem.Name, new[] { Trait.Interact }, "Interact to reload.", Target.Self()).WithActionCost(gunItem.Reload)
                     .WithEffectOnSelf((self) => ((EphemeralAreaProperties)gunItem.EphemeralItemProperties).CurrentMagazine = gunItem.Capacity);
 
                     return new ActionPossibility(reloadAction);
@@ -357,7 +357,7 @@ public partial class StarfinderWeaponsLoader
                 {
                     if (((EphemeralAreaProperties)areaItem.EphemeralItemProperties).CurrentMagazine < areaItem.Usage)
                     {
-                        return "Not Enough Ammo Loaded.";
+                        return "Not enough ammo loaded.";
                     }
                 }
                 return null;
@@ -369,8 +369,7 @@ public partial class StarfinderWeaponsLoader
                 areaFireAction = new CombatAction(weaponOwner, IllustrationName.BurningJet,
                     areaItem.Name + " Area Fire",
                     new[] { Area, Trait.Attack, Trait.Manipulate },
-                    "DC " + GetBestAreaDC(weaponOwner, areaItem) + " Basic Reflex. " +
-                     "use an area fire weapon to attack in a " + effectRange * 5 + " ft. " + areaType + " for " + areaItem.WeaponProperties.Damage + " " + areaItem.WeaponProperties.DamageKind.ToString() + " damage.", target)
+                    "Use an area fire weapon to attack in a " + effectRange * 5 + "-foot " + areaType + " for " + areaItem.WeaponProperties.Damage + " " + areaItem.WeaponProperties.DamageKind.ToString() + " damage (basic DC " + GetBestAreaDC(weaponOwner, areaItem) + " Reflex save mitigates).", target)
                     { Item = areaItem }
                     .WithActionCost(2)
                     .WithSavingThrow(new SavingThrow(Defense.Reflex, (creature) =>
@@ -426,7 +425,7 @@ public partial class StarfinderWeaponsLoader
             {
                 if (action.Item == areaItem && ((EphemeralAreaProperties)areaItem.EphemeralItemProperties).CurrentMagazine < areaItem.Capacity / 2 && action.Traits.Contains(AutomaticTechnical))
                 {
-                    return "You need half your magazine loaded to autofire";
+                    return "You need half your magazine loaded to autofire.";
                 }
                 return null;
             },
@@ -440,8 +439,7 @@ public partial class StarfinderWeaponsLoader
                     autoFireAction = new CombatAction(weaponOwner, IllustrationName.HailOfSplinters,
                         areaItem.Name + " Automatic Fire",
                         new[] { Area, Trait.Attack, AutomaticTechnical, Trait.Manipulate},
-                        "DC " + GetBestAreaDC(weaponOwner, areaItem, true) + " Basic Reflex. " +
-                         "use an automatic fire weapon to attack in a " + effectRange * 5 + " ft. cone for " + areaItem.WeaponProperties.Damage + " " + areaItem.WeaponProperties.DamageKind.ToString() + " damage.", Target.Cone(effectRange))
+                         "Use an automatic fire weapon to attack in a " + effectRange * 5 + "-foot cone for " + areaItem.WeaponProperties.Damage + " " + areaItem.WeaponProperties.DamageKind.ToString() + " damage (basic DC " + GetBestAreaDC(weaponOwner, areaItem, true) + " Reflex save mitigates).", Target.Cone(effectRange))
                     { Item = areaItem }
                         .WithActionCost(2)
                         .WithSavingThrow(new SavingThrow(Defense.Reflex, (creature) =>
