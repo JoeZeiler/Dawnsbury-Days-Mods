@@ -5,6 +5,12 @@
         <properties>
             <property name="Id" value="Tashtari" />
         </properties>
-        <image width="256" height="256" source="Tashtari.png" />
+        <image width="256" height="256" source="StarfinderCreatures/Tashtari.png" />
+    </tile>
+    <tile id="1">
+        <properties>
+            <property name="Id" value="TashtariAlpha" />
+        </properties>
+        <image width="256" height="256" source="StarfinderCreatures/TashtariAlpha.png" />
     </tile>
 </tileset>
