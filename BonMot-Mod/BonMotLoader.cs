@@ -15,6 +15,7 @@ using System.Collections.Generic;
 using Microsoft.Xna.Framework;
 using Dawnsbury.Core;
 using Dawnsbury.Display.Text;
+using Dawnsbury.Display;
 
 namespace Dawnsbury.Mods.Feats.General.BonMot;
 
@@ -116,12 +117,12 @@ public class BonMotLoader
                 description,
                 new[] { Trait.Auditory, Trait.Concentrate, Trait.Emotion, Trait.General, Trait.Mental, Trait.Skill, Linguistic })
             .WithActionCost(1)
-            .WithCustomName("Bon Mot")
+            .WithCustomName("Bon Mot " + RulesBlock.GetIconTextFromNumberOfActions(1))
             .WithPrerequisite(C =>
                 C.Proficiencies.Get(Trait.Diplomacy) >= Proficiency.Trained, "Trained in Diplomacy.")
             .WithOnCreature((sheet, creature) =>
             {
-                creature.AddQEffect(new QEffect("Bon Mot", "You launch an insightful quip at a foe, distracting them.")
+                creature.AddQEffect(new QEffect("Bon Mot " + RulesBlock.GetIconTextFromNumberOfActions(1), "You launch an insightful quip at a foe, distracting them.")
                 {
                     ProvideActionIntoPossibilitySection = (qfself,possibilitySection)=>
                     {
