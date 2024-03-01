@@ -46,7 +46,7 @@ namespace Dawnsbury.Mods.Weapons.StarfinderWeapons
         /// <returns>the stellar cannon item</returns>
         private static Item CreateTacticalStellarCannon(ItemName iName)
         {
-            AreaItem stellarCannon = new AreaItem(iName, IllustrationName.QuestionMark, "Stellar Cannon, Tactical", 0, 39, new[] { Analogue, Unwieldy, Trait.Ranged, Trait.TwoHanded, AreaBurst10ft, AreaTechnical, Trait.Martial, Gun, StarfinderGun })
+            AreaItem stellarCannon = new AreaItem(iName, IllustrationName.QuestionMark, "Stellar Cannon, Tactical", 2, 39, new[] { Analogue, Unwieldy, Trait.Ranged, Trait.TwoHanded, AreaBurst10ft, AreaTechnical, Trait.Martial, Gun, StarfinderGun })
             {
                 BaseGunItemName = "Stellar Cannon, Tactical",
                 MainTrait = AreaBurst10ft,
@@ -73,7 +73,7 @@ namespace Dawnsbury.Mods.Weapons.StarfinderWeapons
         /// <returns>the stellar cannon item</returns>
         private static Item CreateAdvancedStellarCannon(ItemName iName)
         {
-            AreaItem stellarCannon = new AreaItem(iName, IllustrationName.QuestionMark, "Stellar Cannon, Advanced", 0, 104, new[] { Analogue, Unwieldy, Trait.Ranged, Trait.TwoHanded, AreaBurst10ft, AreaTechnical, Trait.Martial, Gun, StarfinderGun })
+            AreaItem stellarCannon = new AreaItem(iName, IllustrationName.QuestionMark, "Stellar Cannon, Advanced", 4, 104, new[] { Analogue, Unwieldy, Trait.Ranged, Trait.TwoHanded, AreaBurst10ft, AreaTechnical, Trait.Martial, Gun, StarfinderGun })
             {
                 BaseGunItemName = "Stellar Cannon, Advanced",
                 MainTrait = AreaBurst10ft,
@@ -129,7 +129,7 @@ namespace Dawnsbury.Mods.Weapons.StarfinderWeapons
         /// <returns>the scattergun item</returns>
         private static Item CreateTacticalScattergun(ItemName iName)
         {
-            AreaItem scattergun = new AreaItem(iName, IllustrationName.QuestionMark, "Scattergun, Tactical", 0, 39, new[] { Analogue, Unwieldy, Trait.Ranged, Trait.TwoHanded, AreaCone, AreaTechnical, Trait.Simple, Concussive, Gun, StarfinderGun })
+            AreaItem scattergun = new AreaItem(iName, IllustrationName.QuestionMark, "Scattergun, Tactical", 2, 39, new[] { Analogue, Unwieldy, Trait.Ranged, Trait.TwoHanded, AreaCone, AreaTechnical, Trait.Simple, Concussive, Gun, StarfinderGun })
             {
                 BaseGunItemName = "Scattergun, Tactical",
                 MainTrait = AreaCone,
@@ -156,7 +156,7 @@ namespace Dawnsbury.Mods.Weapons.StarfinderWeapons
         /// <returns>the scattergun item</returns>
         private static Item CreateAdvancedScattergun(ItemName iName)
         {
-            AreaItem scattergun = new AreaItem(iName, IllustrationName.QuestionMark, "Scattergun, Advanced", 0, 104, new[] { Analogue, Unwieldy, Trait.Ranged, Trait.TwoHanded, AreaCone, AreaTechnical, Trait.Simple, Concussive, Gun, StarfinderGun })
+            AreaItem scattergun = new AreaItem(iName, IllustrationName.QuestionMark, "Scattergun, Advanced", 4, 104, new[] { Analogue, Unwieldy, Trait.Ranged, Trait.TwoHanded, AreaCone, AreaTechnical, Trait.Simple, Concussive, Gun, StarfinderGun })
             {
                 BaseGunItemName = "Scattergun, Advanced",
                 MainTrait = AreaCone,
@@ -212,7 +212,7 @@ namespace Dawnsbury.Mods.Weapons.StarfinderWeapons
         /// <returns>the flame pistol item</returns>
         private static Item CreateTacticalFlamePistol(ItemName iName)
         {
-            AreaItem flamePistol = new AreaItem(iName, IllustrationName.QuestionMark, "Flame Pistol, Tactical", 0, 37, new[] { Analogue, Unwieldy, Trait.Ranged, AreaLine, AreaTechnical, Trait.Simple, Gun, StarfinderGun })
+            AreaItem flamePistol = new AreaItem(iName, IllustrationName.QuestionMark, "Flame Pistol, Tactical", 2, 37, new[] { Analogue, Unwieldy, Trait.Ranged, AreaLine, AreaTechnical, Trait.Simple, Gun, StarfinderGun })
             {
                 BaseGunItemName = "Flame Pistol, Tactical",
                 MainTrait = AreaCone,
@@ -239,7 +239,7 @@ namespace Dawnsbury.Mods.Weapons.StarfinderWeapons
         /// <returns>the flame pistol item</returns>
         private static Item CreateAdvancedFlamePistol(ItemName iName)
         {
-            AreaItem flamePistol = new AreaItem(iName, IllustrationName.QuestionMark, "Flame Pistol, Advanced", 0, 102, new[] { Analogue, Unwieldy, Trait.Ranged, AreaLine, AreaTechnical, Trait.Simple, Gun, StarfinderGun })
+            AreaItem flamePistol = new AreaItem(iName, IllustrationName.QuestionMark, "Flame Pistol, Advanced", 4, 102, new[] { Analogue, Unwieldy, Trait.Ranged, AreaLine, AreaTechnical, Trait.Simple, Gun, StarfinderGun })
             {
                 BaseGunItemName = "Flame Pistol, Advanced",
                 MainTrait = AreaCone,

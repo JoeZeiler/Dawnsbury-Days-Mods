@@ -31,7 +31,7 @@ namespace Dawnsbury.Mods.Classes.StarfinderSoldier
         /// <returns>the feat</returns>
         public static Feat CreatePinDown()
         {
-            return new SoldierFeat("Pin-Down", 1, "",
+            return new SoldierFeat("Pin-Down {icon:Action}", 1, "",
             "{b}Requirements{/b} Your last action was an attack with an area weapon.\n\nSelect one creature that was in the area of effect of your last attack. That creature must make a save against your attack again. This effect deals no damage but can inflict the Suppressed condition on a target who previously saved against it."
             , new[] { StarfinderSoldierLoader.SoldierTrait, Trait.ClassFeat }).WithActionCost(1).WithOnCreature((creature) =>
             {
@@ -120,14 +120,14 @@ namespace Dawnsbury.Mods.Classes.StarfinderSoldier
         /// <returns>the feat</returns>
         public static Feat QuickSwapFeat()
         {
-            return new SoldierFeat("Quick-Swap", 1, "",
+            return new SoldierFeat("Quick-Swap {icon:Reaction}", 1, "",
             "{b}Trigger{/b} You are wielding a two-handed weapon and a hostile creature moves adjacent to you. If you are wielding a two-handed ranged weapon, you stow your current weapon and draw the first two-handed melee weapon in your inventory. If you are wielding a two-handed melee weapon, you instead stow your current weapon and draw the first two-handed ranged weapon in your inventory."
             , new[] { StarfinderSoldierLoader.SoldierTrait, Trait.ClassFeat }).WithOnCreature((creature) =>
             {
                 Creature lastCreatureToAct = null;
                 int lastActionsLeft= 4;
                 bool alreadyAsked = false;
-                creature.AddQEffect(new QEffect("Quick-Swap", "When you are wielding a two-handed weapon and a hostile creature moves adjacent to you, you can swap a two-handed melee weapon in your hand for a two-handed ranged weapon in your inventory or vice versa.")
+                creature.AddQEffect(new QEffect("Quick-Swap {icon:Reaction}", "When you are wielding a two-handed weapon and a hostile creature moves adjacent to you, you can swap a two-handed melee weapon in your hand for a two-handed ranged weapon in your inventory or vice versa.")
                 {
                     //when a creature first moves within 5 feet of this creature, find the first two-handed melee (if carrying ranged) or ranged (if carrying melee) weapon in inventory.
                     //ask player if they want to switch to that weapon, if yes, switch the held weapon.
@@ -226,7 +226,7 @@ namespace Dawnsbury.Mods.Classes.StarfinderSoldier
         /// <returns>the feat</returns>
         public static Feat MenacingLaughter()
         {
-            return new SoldierFeat("Menacing Laughter", 2, "",
+            return new SoldierFeat("Menacing Laughter {icon:Action}", 2, "",
             "Attempt Intimidation checks to Demoralize each creature within 30 feet who you suppressed this turn."
             , new[] { StarfinderSoldierLoader.SoldierTrait, Trait.ClassFeat })
                 .WithActionCost(1)
@@ -278,7 +278,7 @@ namespace Dawnsbury.Mods.Classes.StarfinderSoldier
         /// <returns>the feat</returns>
         public static Feat RelentlessEnduranceFeat()
         {
-            return new SoldierFeat("Relentless Endurance", 2, "",
+            return new SoldierFeat("Relentless Endurance {icon:Reaction}", 2, "",
             "{b}Trigger{/b} You take damage.\r\n{b}Frequency{/b} once per encounter\n\nYou come back stronger. You gain 1d8+4 temporary Hit Points that last for the rest of the encounter."
             , new[] { StarfinderSoldierLoader.SoldierTrait, Trait.ClassFeat }).WithOnCreature((creature) =>
             {
@@ -302,7 +302,7 @@ namespace Dawnsbury.Mods.Classes.StarfinderSoldier
                     }
                 }
 
-                creature.AddQEffect(new QEffect("Relentless Endurance", "When you take damage, once per encounter, you gain 1d8+4 temporary Hit Points.")
+                creature.AddQEffect(new QEffect("Relentless Endurance {icon:Reaction}", "When you take damage, once per encounter, you gain 1d8+4 temporary Hit Points.")
                 {
                     //makes sure the feat can be used only once per combat
                     StartOfCombat = async (qfself) =>
@@ -352,7 +352,7 @@ namespace Dawnsbury.Mods.Classes.StarfinderSoldier
         /// <returns>the feat</returns>
         public static Feat PunishingSalvoFeat()
         {
-            return new SoldierFeat("Punishing Salvo", 4, "",
+            return new SoldierFeat("Punishing Salvo {icon:Action}", 4, "",
                 "{b}Requirements{/b} Your last action this turn was a primary target Strike.\r\nYou can make a second Strike against your primary target, ignoring the effect of the unwieldy trait that prevents additional attacks. This doesn't make a new area attack and is instead treated as just a single Strike against the target made using the primary target rules.",
                 new[] { StarfinderSoldierLoader.SoldierTrait, Trait.ClassFeat })
                 .WithActionCost(1)
@@ -360,7 +360,7 @@ namespace Dawnsbury.Mods.Classes.StarfinderSoldier
                 {
                     Item lastActionPrimStrikeWeapon = null;
                     Creature strikedCreature = null;
-                    creature.AddQEffect(new QEffect("Punishing Salvo", "{b}Requirements{/b} Your last action this turn was a primary target Strike.\n\nYou can make a second Strike against your primary target, ignoring the effect of the unwieldy trait that prevents additional attacks. This doesn't make a new area attack and is instead treated as just a single Strike against the target made using the primary target rules.")
+                    creature.AddQEffect(new QEffect("Punishing Salvo {icon:Action}", "{b}Requirements{/b} Your last action this turn was a primary target Strike.\n\nYou can make a second Strike against your primary target, ignoring the effect of the unwieldy trait that prevents additional attacks. This doesn't make a new area attack and is instead treated as just a single Strike against the target made using the primary target rules.")
                     {
                         //if the last action you took was to attempt to strike a primary target, enable the punishing salvo action
                         AfterYouTakeHostileAction = (qfself,action) =>
