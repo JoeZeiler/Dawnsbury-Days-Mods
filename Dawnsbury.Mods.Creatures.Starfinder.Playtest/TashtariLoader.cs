@@ -52,6 +52,8 @@ namespace Dawnsbury.Mods.Creatures.Starfinder.Playtest
                 WeaponProperties = new WeaponProperties("1d6", DamageKind.Fire)
                 {
                     ItemBonus = 1,
+                    VfxStyle = new VfxStyle(15, ProjectileKind.Ray, IllustrationName.FireRay),
+                    Sfx = SfxName.FireRay
 
                 }.WithAdditionalDamage("4", DamageKind.Fire).WithAdditionalPersistentDamage("1d4", DamageKind.Fire).WithRangeIncrement(12),
             };
@@ -63,8 +65,7 @@ namespace Dawnsbury.Mods.Creatures.Starfinder.Playtest
                 WeaponProperties = new WeaponProperties("1d8", DamageKind.Piercing)
                 {
                     ItemBonus = 1,
-                    VfxStyle = new VfxStyle(15, ProjectileKind.Ray, IllustrationName.FireRay),
-                    Sfx = SfxName.FireRay
+                    Sfx = SfxName.ZombieAttack
                 }
             };
 
@@ -215,6 +216,8 @@ namespace Dawnsbury.Mods.Creatures.Starfinder.Playtest
                 WeaponProperties = new WeaponProperties("2d6", DamageKind.Fire)
                 {
                     ItemBonus = 1,
+                    VfxStyle = new VfxStyle(15, ProjectileKind.Ray, IllustrationName.FireRay),
+                    Sfx = SfxName.FireRay
 
                 }.WithAdditionalDamage("4", DamageKind.Fire).WithAdditionalPersistentDamage("1d6", DamageKind.Fire).WithRangeIncrement(12),
             };
@@ -226,8 +229,7 @@ namespace Dawnsbury.Mods.Creatures.Starfinder.Playtest
                 WeaponProperties = new WeaponProperties("2d6", DamageKind.Piercing)
                 {
                     ItemBonus = 1,
-                    VfxStyle = new VfxStyle(15, ProjectileKind.Ray, IllustrationName.FireRay),
-                    Sfx = SfxName.FireRay
+                    Sfx = SfxName.ZombieAttack
                 }.WithAdditionalDamage("1", DamageKind.Piercing)
             };
 
