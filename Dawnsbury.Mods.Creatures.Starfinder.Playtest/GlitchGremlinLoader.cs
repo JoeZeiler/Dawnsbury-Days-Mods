@@ -28,61 +28,61 @@ namespace Dawnsbury.Mods.Creatures.Starfinder.Playtest
         public static Trait Tech;
         public static Trait Tiny;
 
-        [DawnsburyDaysModMainMethod]
-        public static void LoadMod()
-        {
-            Tech = ModManager.RegisterTrait("Tech", new TraitProperties("Tech", true, "Incorporates electronics, computer systems, and power sources.", true));
-            Fey = ModManager.RegisterTrait("Fey", new TraitProperties("Fey", true, "", true));
-            Gremlin = ModManager.RegisterTrait("Gremlin", new TraitProperties("Gremlin", true, "", true));
-            Tiny = ModManager.RegisterTrait("Tiny", new TraitProperties("Tiny", true, "", true));
-            //ModManager.RegisterNewSpell("GGThunderstrike")
-        }
+        //[DawnsburyDaysModMainMethod]
+        //public static void LoadMod()
+        //{
+        //    Tech = ModManager.RegisterTrait("Tech", new TraitProperties("Tech", true, "Incorporates electronics, computer systems, and power sources.", true));
+        //    Fey = ModManager.RegisterTrait("Fey", new TraitProperties("Fey", true, "", true));
+        //    Gremlin = ModManager.RegisterTrait("Gremlin", new TraitProperties("Gremlin", true, "", true));
+        //    Tiny = ModManager.RegisterTrait("Tiny", new TraitProperties("Tiny", true, "", true));
+        //    //ModManager.RegisterNewSpell("GGThunderstrike")
+        //}
 
-        private static Creature CreateGlitchGremlin(Encounter encounter)
-        {
-            var GlitchGremlinIllustration = new ModdedIllustration(@"StarfinderCreaturesResources\ComputerGlitchGremlinToken.png");
-            var newCreature = new Creature(GlitchGremlinIllustration, "Computer Glitch Gremlin", new[] { Trait.Homebrew, Tech, Fey, Gremlin, Tiny }, -1, 5, 4,
-                                    new Defenses(14, 5, 8, 6), 8,
-                                    new Abilities(0, 2, 1, 3, 1, 0),
-                                    new Skills(acrobatics: 4, athletics: 3, arcana: 8, crafting: 5, stealth: 4)).WithProficiency(Trait.Unarmed, Proficiency.Expert);
-            newCreature.AnimationData.SizeMultiplier = 0.4F;
+        //private static Creature CreateGlitchGremlin(Encounter encounter)
+        //{
+        //    var GlitchGremlinIllustration = new ModdedIllustration(@"StarfinderCreaturesResources\ComputerGlitchGremlinToken.png");
+        //    var newCreature = new Creature(GlitchGremlinIllustration, "Computer Glitch Gremlin", new[] { Trait.Homebrew, Tech, Fey, Gremlin, Tiny }, -1, 5, 4,
+        //                            new Defenses(14, 5, 8, 6), 8,
+        //                            new Abilities(0, 2, 1, 3, 1, 0),
+        //                            new Skills(acrobatics: 4, athletics: 3, arcana: 8, crafting: 5, stealth: 4)).WithProficiency(Trait.Unarmed, Proficiency.Expert);
+        //    newCreature.AnimationData.SizeMultiplier = 0.4F;
 
-            newCreature.AddQEffect(QEffect.DamageResistance(DamageKind.Cold, 1));
-            newCreature.AddQEffect(QEffect.DamageResistance(DamageKind.Electricity, 1));
-            newCreature.AddQEffect(QEffect.DamageWeakness(DamageKind.Fire, 2));
-            newCreature.AddQEffect(new QEffect("Cold Iron Weakness", "")
-            {
-                Name = "Cold Iron Weakness",
-                Value = 2
-            });
+        //    newCreature.AddQEffect(QEffect.DamageResistance(DamageKind.Cold, 1));
+        //    newCreature.AddQEffect(QEffect.DamageResistance(DamageKind.Electricity, 1));
+        //    newCreature.AddQEffect(QEffect.DamageWeakness(DamageKind.Fire, 2));
+        //    newCreature.AddQEffect(new QEffect("Cold Iron Weakness", "")
+        //    {
+        //        Name = "Cold Iron Weakness",
+        //        Value = 2
+        //    });
 
-            var UnstableSparkAttack = new Item(IllustrationName.FireRay, "muzzle beam", new[] { Trait.Ranged, Trait.Unarmed, Trait.Weapon, Trait.Agile, Trait.Electricity, Trait.Magical})
-            {
-                WeaponProperties = new WeaponProperties("1d4", DamageKind.Electricity)
-                {
-                    ItemBonus = 2,
-                    VfxStyle = new VfxStyle(15, ProjectileKind.Arrow, IllustrationName.LightningBolt),
-                    Sfx = SfxName.ElectricArc
+        //    var UnstableSparkAttack = new Item(IllustrationName.FireRay, "muzzle beam", new[] { Trait.Ranged, Trait.Unarmed, Trait.Weapon, Trait.Agile, Trait.Electricity, Trait.Magical})
+        //    {
+        //        WeaponProperties = new WeaponProperties("1d4", DamageKind.Electricity)
+        //        {
+        //            ItemBonus = 2,
+        //            VfxStyle = new VfxStyle(15, ProjectileKind.Arrow, IllustrationName.LightningBolt),
+        //            Sfx = SfxName.ElectricArc
 
-                }.WithAdditionalDamage("1", DamageKind.Electricity).WithRangeIncrement(4),
-            };
+        //        }.WithAdditionalDamage("1", DamageKind.Electricity).WithRangeIncrement(4),
+        //    };
 
-            newCreature.WithUnarmedStrike(UnstableSparkAttack);
+        //    newCreature.WithUnarmedStrike(UnstableSparkAttack);
 
-            var biteAttack = new Item(IllustrationName.Jaws, "bite", new[] { Trait.Melee, Trait.Unarmed, Trait.Agile, Trait.Finesse, Trait.Magical })
-            {
-                WeaponProperties = new WeaponProperties("1d4", DamageKind.Piercing)
-                {
-                    ItemBonus = 1,
-                    Sfx= SfxName.ScratchFlesh
-                }.WithAdditionalDamage("2", DamageKind.Piercing)
-            };
+        //    var biteAttack = new Item(IllustrationName.Jaws, "bite", new[] { Trait.Melee, Trait.Unarmed, Trait.Agile, Trait.Finesse, Trait.Magical })
+        //    {
+        //        WeaponProperties = new WeaponProperties("1d4", DamageKind.Piercing)
+        //        {
+        //            ItemBonus = 1,
+        //            Sfx= SfxName.ScratchFlesh
+        //        }.WithAdditionalDamage("2", DamageKind.Piercing)
+        //    };
 
-            newCreature.WithAdditionalUnarmedStrike(biteAttack);
+        //    newCreature.WithAdditionalUnarmedStrike(biteAttack);
 
-            //newCreature.WithS
+        //    //newCreature.WithS
 
-            return newCreature;
-        }
+        //    return newCreature;
+        //}
     }
 }
