@@ -40,8 +40,6 @@ public class BonMotLoader
     public static void LoadMod()
     {
         DairyBottleIllustration = new ModdedIllustration(@"BonMotResources\DairyBottle.png");
-        GuybrushIllustration = new ModdedIllustration(@"BonMotResources\GuybrushWithSword.png");
-        CaptainSmirkIllustration = new ModdedIllustration(@"BonMotResources\CaptainSmirk.png");
         List<Tuple<string, string, string>> insultDirectory = LoadInsultDirectory();
         //registering the linguistic trait so we can add it to Bon Mot
         Linguistic = ModManager.RegisterTrait(
@@ -131,7 +129,7 @@ public class BonMotLoader
                         }
 
                         var dude = qfself.Owner;
-                        CombatAction bonmotAction = new CombatAction(dude, CaptainSmirkIllustration!=null?CaptainSmirkIllustration:IllustrationName.QuestionMark, "Bon Mot", new Trait[] { Trait.Auditory, Trait.Concentrate, Trait.Emotion, Trait.General, Trait.Mental, Trait.Skill, Trait.Basic, Linguistic },
+                        CombatAction bonmotAction = new CombatAction(dude, IllustrationName.Demoralize, "Bon Mot", new Trait[] { Trait.Auditory, Trait.Concentrate, Trait.Emotion, Trait.General, Trait.Mental, Trait.Skill, Trait.Basic, Linguistic },
                             description,
                             Target.Ranged(6).WithAdditionalConditionOnTargetCreature((caster, target) => target.DoesNotSpeakCommon ? Usability.NotUsableOnThisCreature("target cannot understand your witty remarks") : Usability.Usable))
                             .WithActionCost(1)
@@ -174,7 +172,7 @@ public class BonMotLoader
                                             
                                             //retort removes bon mot debuff with an action, but only if the bon mot creature is within 30 feet, can be seen by the retort user. AI also prioritizes attacking at least once.
                                             return new ActionPossibility(
-                                                    new CombatAction(targetDude, GuybrushIllustration != null?GuybrushIllustration:IllustrationName.QuestionMark, "Retort", new Trait[] { Trait.Auditory, Trait.Concentrate, Trait.Mental, Linguistic },
+                                                    new CombatAction(targetDude, IllustrationName.Demoralize, "Retort", new Trait[] { Trait.Auditory, Trait.Concentrate, Trait.Mental, Linguistic },
                                                     "Retort to get rid of a Bon Mot debuff.", Target.Self((innerSelf, ai) => (ai.Tactic == Tactic.Standard && (innerSelf.Actions.AttackedThisTurn.Any() || (innerSelf.Spellcasting != null)) && innerSelf.DistanceTo(caster) <= 6 && innerSelf.CanSee(caster))
                                                     ? AIConstants.EXTREMELY_PREFERRED : AIConstants.NEVER))
                                                     .WithActionCost(1)
@@ -220,7 +218,7 @@ public class BonMotLoader
 
                                             //retort removes bon mot debuff with an action, but only if the bon mot creature is within 30 feet, can be seen by the retort user. AI also prioritizes attacking at least once unless they can cast spells.
                                             return new ActionPossibility(
-                                                    new CombatAction(targetDude, GuybrushIllustration != null ? GuybrushIllustration : IllustrationName.QuestionMark, "Retort", new Trait[] { Trait.Auditory, Trait.Concentrate, Trait.Mental, Linguistic },
+                                                    new CombatAction(targetDude, IllustrationName.Demoralize, "Retort", new Trait[] { Trait.Auditory, Trait.Concentrate, Trait.Mental, Linguistic },
                                                     "Retort to get rid of a Bon Mot debuff.", Target.Self((innerSelf, ai) => (ai.Tactic == Tactic.Standard && (innerSelf.Actions.AttackedThisTurn.Any() || (innerSelf.Spellcasting != null)) && innerSelf.DistanceTo(caster) <= 6 && innerSelf.CanSee(caster))
                                                     ? AIConstants.EXTREMELY_PREFERRED : AIConstants.NEVER))
                                                     .WithActionCost(1)
