@@ -99,11 +99,7 @@ namespace Dawnsbury.Mods.Classes.StarfinderSoldier
                                             target.AddQEffect(SoldierStatusEffects.GenerateSupressedEffect(caster).WithExpirationAtStartOfSourcesTurn(caster, 1));
                                         }
                                     });
-
-                                    if(StarfinderSoldierLoader.SuppressedIllustration!=null)
-                                    {
-                                        pinDownAction.Illustration = StarfinderSoldierLoader.SuppressedIllustration;
-                                    }
+                                    pinDownAction.Illustration = IllustrationName.TakeCover;
 
                                     return new ActionPossibility(pinDownAction);
                                 }

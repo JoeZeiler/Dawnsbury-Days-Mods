@@ -6,12 +6,7 @@
   <ItemGroup>
     <ProjectReference Include="..\Dawnsbury.Mods.Weapons.StellarCannon\Dawnsbury.Mods.Weapons.StarfinderWeapons.csproj" />
   </ItemGroup>
-  <ItemGroup>
-    <None Update="StarfinderSoldierResources\Suppressed.png">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </None>
-  </ItemGroup>
   <Target Name="PostBuild" AfterTargets="PostBuildEvent">
-    <Exec Command="xcopy &quot;$(TargetDir)StarfinderSoldierResources\*.*&quot; &quot;$(TargetDir)Workshop Content\CustomMods\StarfinderSoldierResources&quot; /Y /I /E&#xD;&#xA;copy /Y &quot;$(TargetDir)$(ProjectName).dll&quot; &quot;$(TargetDir)Workshop Content\CustomMods\$(ProjectName).dll&quot;" />
+    <Exec Command="copy /Y &quot;$(TargetDir)$(ProjectName).dll&quot; &quot;$(TargetDir)Workshop Content\CustomMods\$(ProjectName).dll&quot;" />
   </Target>
 </Project>
