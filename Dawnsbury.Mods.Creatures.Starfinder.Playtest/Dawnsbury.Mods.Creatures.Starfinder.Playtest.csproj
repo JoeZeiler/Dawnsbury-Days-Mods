@@ -28,7 +28,7 @@
     </None>
   </ItemGroup>
   <Target Name="PostBuild" AfterTargets="PostBuildEvent">
-    <Exec Command="xcopy &quot;$(TargetDir)StarfinderCreaturesResources\*.*&quot; &quot;$(TargetDir)Workshop Content\CustomMods\StarfinderCreaturesResources&quot; /Y /I /E&#xD;&#xA;xcopy &quot;$(TargetDir)ORC Licence Attribution\*.*&quot; &quot;$(TargetDir)Workshop Content\CustomMods\ORC Licence Attribution&quot; /Y /I /E&#xD;&#xA;copy /Y &quot;$(TargetDir)$(ProjectName).dll&quot; &quot;$(TargetDir)Workshop Content\CustomMods\$(ProjectName).dll&quot;&#xD;&#xA;xcopy &quot;$(TargetDir)CustomMaps\*.*&quot; &quot;$(TargetDir)Workshop Content\CustomMaps&quot; /Y /I /E&#xD;&#xA;xcopy &quot;$(TargetDir)ORC Licence Attribution\*.*&quot; &quot;$(TargetDir)Workshop Content\CustomMaps\ORC Licence Attribution&quot; /Y /I /E" />
+    <Exec Command="xcopy &quot;$(TargetDir)StarfinderCreaturesResources\*.*&quot; &quot;$(TargetDir)Workshop Content\CustomMods\StarfinderCreaturesResources&quot; /Y /I /E&#xD;&#xA;xcopy &quot;$(TargetDir)ORC_Licence_Attribution\*.*&quot; &quot;$(TargetDir)Workshop Content\CustomMods\ORC_Licence_Attribution&quot; /Y /I /E&#xD;&#xA;copy /Y &quot;$(TargetDir)$(ProjectName).dll&quot; &quot;$(TargetDir)Workshop Content\CustomMods\$(ProjectName).dll&quot;&#xD;&#xA;xcopy &quot;$(TargetDir)CustomMaps\*.*&quot; &quot;$(TargetDir)Workshop Content\CustomMaps&quot; /Y /I /E&#xD;&#xA;" />
   </Target>
 
 </Project>
