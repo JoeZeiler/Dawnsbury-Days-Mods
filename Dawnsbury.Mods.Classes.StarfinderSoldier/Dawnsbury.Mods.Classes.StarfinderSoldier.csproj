@@ -7,6 +7,6 @@
     <ProjectReference Include="..\Dawnsbury.Mods.Weapons.StellarCannon\Dawnsbury.Mods.Weapons.StarfinderWeapons.csproj" />
   </ItemGroup>
   <Target Name="PostBuild" AfterTargets="PostBuildEvent">
-    <Exec Command="copy /Y &quot;$(TargetDir)$(ProjectName).dll&quot; &quot;$(TargetDir)Workshop Content\CustomMods\$(ProjectName).dll&quot;" />
+    <Exec Command="xcopy &quot;$(TargetDir)ORC Licence Attribution\*.*&quot; &quot;$(TargetDir)Workshop Content\CustomMods\ORC Licence Attribution&quot; /Y /I /E&#xD;&#xA;copy /Y &quot;$(TargetDir)$(ProjectName).dll&quot; &quot;$(TargetDir)Workshop Content\CustomMods\$(ProjectName).dll&quot;" />
   </Target>
 </Project>
