@@ -32,7 +32,6 @@ public class StarfinderSoldierLoader
     public static Trait BombardTechnical;
     public static Trait ArmorStormTechnical;
     public static Feat FearsomeBulwarkFeat;
-    public static ModdedIllustration SuppressedIllustration = null;
 
     /// <summary>
     /// loads the starfinder soldier mod. the Starfinder Weapons mod is a dependency
@@ -43,8 +42,6 @@ public class StarfinderSoldierLoader
         SoldierTrait = ModManager.RegisterTrait("Soldier",new TraitProperties("Soldier",true, relevantForShortBlock: true) { IsClassTrait = true});
         BombardTechnical = ModManager.RegisterTrait("BombardTechnical", new TraitProperties("BombardTechnical", false));
         ArmorStormTechnical = ModManager.RegisterTrait("ArmorStormTechnical", new TraitProperties("ArmorStormTechnical", false));
-
-        SuppressedIllustration = new ModdedIllustration(@"StarfinderSoldierResources\Suppressed.png");
 
         FearsomeBulwarkFeat = new Feat(FeatName.CustomFeat, "Fearsome Bulwark", "You can use your Constitution modifier instead of your Charisma modifier on Intimidation checks (this does not show up on your character sheet).", new List<Trait>(), new List<Feat>()).WithOnCreature((creature) =>
         {

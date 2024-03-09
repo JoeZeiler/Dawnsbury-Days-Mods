@@ -2,9 +2,6 @@ ORC NOTICE:
 This product is licensed under the ORC License located at the Library of Congress at TX 9-307-067 and available online at various locations including paizo.com/orclicense and azoralaw.com/orclicense. All warranties are disclaimed as set forth therein.
 
 Attribution:
-
-Starfinder Field Test #1 © 2023 Paizo Inc. Authors:
-Jessica Catalan, Jenny Jarzabski, Dustin Knight, and Thurston Hillma
 Starfinder Field Test #3 © 2024 Paizo Inc. Authors:
 Jessica Catalan, Thurston Hillman, Jenny Jarzabski, Mike Kimmel, and Dustin Knight.
 
