@@ -24,13 +24,11 @@ namespace Dawnsbury.Mods.Feats.General.BonMot;
 public class BonMotLoader
 {
 
-    public const string defaultInsult = "You fight like a dairy farmer!";
-    public const string defaultRetort = "How appropriate, you fight like a cow!";
-    public const string defaultCritInsult = "I will milk every drop of blood from your body!";
+    public const string defaultInsult = "You couldn't handle my house cat!";
+    public const string defaultRetort = "That WOULD be an improvement";
+    public const string defaultCritInsult = "More of your conversation would infect my brain.";
     private const string logDialogFormat = "{0} says, \"{1}\"";
     private static ModdedIllustration DairyBottleIllustration;
-    private static ModdedIllustration GuybrushIllustration;
-    private static ModdedIllustration CaptainSmirkIllustration;
 
     /// <summary>
     /// here to add the linguistic trait
@@ -61,7 +59,7 @@ public class BonMotLoader
         {
             string directory = Directory.GetCurrentDirectory();
             directory = Directory.GetParent(directory).FullName;
-            directory = Path.Combine(directory, "CustomMods", "BonMotResources","Insults.txt");
+            directory = Path.Combine(directory, "BonMotResources","Insults.txt");
             StreamReader sr = new StreamReader(directory);
             string line = sr.ReadLine();
             while (line != null)
