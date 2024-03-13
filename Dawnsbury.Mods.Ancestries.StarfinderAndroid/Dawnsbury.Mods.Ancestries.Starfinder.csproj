@@ -4,6 +4,11 @@
     <InstallIntoDevelopmentEnvironment>false</InstallIntoDevelopmentEnvironment>
   </PropertyGroup>
   <Target Name="PostBuild" AfterTargets="PostBuildEvent">
-    <Exec Command="xcopy &quot;$(TargetDir)ORC_Licence_Attribution\*.*&quot; &quot;$(TargetDir)Workshop Content\CustomMods\ORC_Licence_Attribution&quot; /Y /I /E&#xD;&#xA;copy /Y &quot;$(TargetDir)$(ProjectName).dll&quot; &quot;$(TargetDir)Workshop Content\CustomMods\$(ProjectName).dll&quot;" />
+    <Exec Command="xcopy &quot;$(TargetDir)ORC_Licence_Attribution\ORC copyright notice.html&quot; &quot;$(TargetDir)Workshop Content&quot; /Y /I /E&#xD;&#xA;copy /Y &quot;$(TargetDir)$(ProjectName).dll&quot; &quot;$(TargetDir)Workshop Content\CustomMods\$(ProjectName).dll&quot;" />
   </Target>
+  <ItemGroup>
+    <None Update="ORC_Licence_Attribution\ORC copyright notice.html">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+  </ItemGroup>
 </Project>
