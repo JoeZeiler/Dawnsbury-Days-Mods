@@ -410,7 +410,7 @@ namespace Dawnsbury.Mods.Classes.Starfinder.Envoy
                                 if(changePlansResult is ConfirmOption)
                                 {
 
-                                    CombatAction NotInTheFaceReactionAction = new CombatAction(creature, IllustrationName.ExclamationMark, "Not in the Face {icon:Reacton}",
+                                    CombatAction NotInTheFaceReactionAction = new CombatAction(creature, IllustrationName.ExclamationMark, "Not in the Face {icon:Reaction}",
                                         new[] { Trait.Emotion, Trait.Mental, StarfinderEnvoyLoader.EnvoyTrait }, "attempt to decieve the attacker into second guessing their attacks.", Target.AdjacentCreature())
                                     .WithActionCost(0)
                                     .WithActiveRollSpecification(new ActiveRollSpecification(Checks.SkillCheck(Skill.Deception), Checks.DefenseDC(Defense.Will)))
