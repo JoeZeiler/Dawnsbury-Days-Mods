@@ -377,7 +377,7 @@ namespace Dawnsbury.Mods.Classes.Starfinder.Envoy
                             if ((usedSkill == Skill.Acrobatics || usedSkill == Skill.Athletics || usedSkill == Skill.Stealth)
                             && target != null && target.QEffects.Any(qf => qf.Name == StarfinderEnvoyLoader.ACQUIRED_ASSET && qf.Source == creature))
                             {
-                                return new Bonus(1, BonusType.Circumstance, "Acquired Asset");
+                                return new Bonus(1, BonusType.Circumstance, "Acquired Asset",true);
                             }
                             return null;
                         },

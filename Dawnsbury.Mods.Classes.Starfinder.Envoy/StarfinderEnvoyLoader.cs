@@ -248,11 +248,10 @@ namespace Dawnsbury.Mods.Classes.Starfinder.Envoy
                     },
                     BonusToSkillChecks = (usedSkill, combatAction, target) =>
                     {
-                        if (combatAction.ActionId == ActionId.Seek ||
-                        ((usedSkill == Skill.Deception || usedSkill == Skill.Diplomacy || usedSkill == Skill.Intimidation)
-                        && target != null && target.QEffects.Any(qf => qf.Name == AcqAssetQFX.Name && qf.Source == AcqAssetQFX.Source)))
+                        if ((combatAction.ActionId == ActionId.Seek || usedSkill == Skill.Deception || usedSkill == Skill.Diplomacy || usedSkill == Skill.Intimidation)
+                        && target != null && target.QEffects.Any(qf => qf.Name == ACQUIRED_ASSET && qf.Source == creature))
                         {
-                            return new Bonus(1, BonusType.Circumstance, "Acquired Asset");
+                            return new Bonus(1, BonusType.Circumstance, "Acquired Asset",true);
                         }
                         return null;
                     },
