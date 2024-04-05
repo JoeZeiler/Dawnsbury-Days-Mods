@@ -12,6 +12,6 @@
     </None>
   </ItemGroup>
   <Target Name="PostBuild" AfterTargets="PostBuildEvent">
-    <Exec Command="xcopy &quot;$(TargetDir)ORC_Licence_Attribution\ORC copyright notice.html&quot; &quot;$(TargetDir)Workshop Content&quot; /Y /I /E&#xD;&#xA;copy /Y &quot;$(TargetDir)$(ProjectName).dll&quot; &quot;$(TargetDir)Workshop Content\CustomMods\$(ProjectName).dll&quot;" />
+    <Exec Command="xcopy &quot;$(TargetDir)ORC_Licence_Attribution\ORC copyright notice.html&quot; &quot;$(TargetDir)Workshop Content&quot; /Y /I /E&#xD;&#xA;copy /Y &quot;$(TargetDir)$(ProjectName).dll&quot; &quot;$(TargetDir)Workshop Content\CustomMods\$(ProjectName).dll&quot;&#xD;&#xA;copy /Y &quot;$(TargetDir)Dawnsbury.Mods.StarfinderSharedFunctionality.dll&quot; &quot;$(TargetDir)Workshop Content\CustomMods\Dawnsbury.Mods.StarfinderSharedFunctionality.dll&quot;" />
   </Target>
 </Project>

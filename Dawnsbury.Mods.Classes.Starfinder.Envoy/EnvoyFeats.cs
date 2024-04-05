@@ -270,12 +270,12 @@ namespace Dawnsbury.Mods.Classes.Starfinder.Envoy
                             if(possSection.Name == StarfinderEnvoyLoader.DIRECTIVES_POSSIBILITY_SECTION_NAME)
                             {
 
-                                CombatAction GetInThereAction = new CombatAction(creature, IllustrationName.Haste, "Get In There!", new[] { Trait.Concentrate, StarfinderEnvoyLoader.Directive, StarfinderEnvoyLoader.EnvoyTrait, Trait.Visual }, "Until your next turn, you and your allies gain a +5-foot status bonus to Speed.\n{b}Lead by Example{/b} if you step or stride before your turn ends, each ally can immediately Step or Stride up to half their Speed (rounded down to nearest 5-feet) as a free action", Target.Self())
+                                CombatAction GetInThereAction = new CombatAction(creature, IllustrationName.FleetStep, "Get In There!", new[] { Trait.Concentrate, StarfinderEnvoyLoader.Directive, StarfinderEnvoyLoader.EnvoyTrait, Trait.Visual }, "Until your next turn, you and your allies gain a +5-foot status bonus to Speed.\n{b}Lead by Example{/b} if you step or stride before your turn ends, each ally can immediately Step or Stride up to half their Speed (rounded down to nearest 5-feet) as a free action", Target.Self())
                                 .WithEffectOnSelf((thisCreature) =>
                                 {
                                     foreach(var friendly in thisCreature.Battle.AllCreatures.Where(c=>c.FriendOf(thisCreature)))
                                     {
-                                        friendly.AddQEffect(new QEffect("Getting in there", "+5 ft status bonus to speed from your friendly neighborhood envoy", ExpirationCondition.ExpiresAtStartOfSourcesTurn, thisCreature, IllustrationName.Haste)
+                                        friendly.AddQEffect(new QEffect("Getting in there", "+5 ft status bonus to speed from your friendly neighborhood envoy", ExpirationCondition.ExpiresAtStartOfSourcesTurn, thisCreature, IllustrationName.FleetStep)
                                         {
                                             BonusToAllSpeeds = (qfSelf) =>
                                             {
@@ -321,12 +321,12 @@ namespace Dawnsbury.Mods.Classes.Starfinder.Envoy
                             if (possSection.Name == StarfinderEnvoyLoader.DIRECTIVES_POSSIBILITY_SECTION_NAME)
                             {
 
-                                CombatAction GetInThereAction = new CombatAction(creature, IllustrationName.Haste, "Search High and Low", new[] { Trait.Concentrate, StarfinderEnvoyLoader.Directive, StarfinderEnvoyLoader.EnvoyTrait, Trait.Visual }, "Until your next turn, You and your allies get a +2 circumstance bonus to Perception checks to Seek.\n{b}Lead by Example{/b} if you Seek before your turn ends, each ally is hasted but may only use the extra action to seek.", Target.Self())
+                                CombatAction GetInThereAction = new CombatAction(creature, IllustrationName.Seek, "Search High and Low", new[] { Trait.Concentrate, StarfinderEnvoyLoader.Directive, StarfinderEnvoyLoader.EnvoyTrait, Trait.Visual }, "Until your next turn, You and your allies get a +2 circumstance bonus to Perception checks to Seek.\n{b}Lead by Example{/b} if you Seek before your turn ends, each ally is hasted but may only use the extra action to seek.", Target.Self())
                                 .WithEffectOnSelf((thisCreature) =>
                                 {
                                     foreach (var friendly in thisCreature.Battle.AllCreatures.Where(c => c.FriendOf(thisCreature)))
                                     {
-                                        friendly.AddQEffect(new QEffect("Search High and Low", "+2 circumstance bonus to Perception checks from your fellow envoy", ExpirationCondition.ExpiresAtStartOfSourcesTurn, thisCreature, IllustrationName.Haste)
+                                        friendly.AddQEffect(new QEffect("Search High and Low", "+2 circumstance bonus to Perception checks from your fellow envoy", ExpirationCondition.ExpiresAtStartOfSourcesTurn, thisCreature, IllustrationName.Seek)
                                         {                                            
                                             BonusToAttackRolls = (qfself, combatAction, targetCreature) =>
                                             {

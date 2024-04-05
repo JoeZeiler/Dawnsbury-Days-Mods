@@ -174,14 +174,14 @@ namespace Dawnsbury.Mods.Classes.Starfinder.Envoy
                                     {
                                         target1 = target;
                                         target.AddQEffect(AcqAssetQFX);
-                                        creature.Battle.CombatLog.Add(new LogLine(2, creature.Name + " has acquired " + target.Name + " as an asset.", null, creature.Name + " has acquired " + target.Name + " as an asset."));
+                                        creature.Battle.CombatLog.Add(new LogLine(2, creature.Name + " has acquired " + target.Name + " as an asset.", "Accquire Asset", creature.Name + " has acquired " + target.Name + " as an asset."));
                                         creature.Occupies.Overhead("Asset Acquired", Color.Yellow);
                                     }
                                     else if (target2 == null)
                                     {
                                         target2 = target;
                                         target.AddQEffect(AcqAssetQFX);
-                                        creature.Battle.CombatLog.Add(new LogLine(2, creature.Name + " has acquired " + target.Name + " as an asset.", null, creature.Name + " has acquired " + target.Name + " as an asset."));
+                                        creature.Battle.CombatLog.Add(new LogLine(2, creature.Name + " has acquired " + target.Name + " as an asset.", "Accquire Asset", creature.Name + " has acquired " + target.Name + " as an asset."));
                                         creature.Occupies.Overhead("Asset Acquired", Color.Yellow);
                                     }
                                     else
@@ -211,7 +211,7 @@ namespace Dawnsbury.Mods.Classes.Starfinder.Envoy
                                                 await swapResult.Action();
                                                 selectedCreature.RemoveAllQEffects(qf => qf.Name == AcqAssetQFX.Name && qf.Source == creature);
                                                 target.AddQEffect(AcqAssetQFX);
-                                                creature.Battle.CombatLog.Add(new LogLine(2, creature.Name + " has acquired " + target.Name + " as an asset.", null, creature.Name + " has acquired " + target.Name + " as an asset."));
+                                                creature.Battle.CombatLog.Add(new LogLine(2, creature.Name + " has acquired " + target.Name + " as an asset.", "Accquire Asset", creature.Name + " has acquired " + target.Name + " as an asset."));
                                                 creature.Occupies.Overhead("Asset Acquired", Color.Yellow);
                                             }
                                         }
@@ -238,7 +238,7 @@ namespace Dawnsbury.Mods.Classes.Starfinder.Envoy
                                         target1?.RemoveAllQEffects(qf => qf.Name == AcqAssetQFX.Name && qf.Source == creature);
                                         target1 = target;
                                         target.AddQEffect(AcqAssetQFX);
-                                        creature.Battle.CombatLog.Add(new LogLine(2, creature.Name + " has acquired " + target.Name + " as an asset.", null, creature.Name + " has acquired " + target.Name + " as an asset."));
+                                        creature.Battle.CombatLog.Add(new LogLine(2, creature.Name + " has acquired " + target.Name + " as an asset.", "Accquire Asset", creature.Name + " has acquired " + target.Name + " as an asset."));
                                         creature.Occupies.Overhead("Asset Acquired", Color.Yellow);
                                     }
                                 }
@@ -248,7 +248,7 @@ namespace Dawnsbury.Mods.Classes.Starfinder.Envoy
                     },
                     BonusToSkillChecks = (usedSkill, combatAction, target) =>
                     {
-                        if ((combatAction.ActionId == ActionId.Seek || usedSkill == Skill.Deception || usedSkill == Skill.Diplomacy || usedSkill == Skill.Intimidation)
+                        if ((combatAction?.ActionId == ActionId.Seek || usedSkill == Skill.Deception || usedSkill == Skill.Diplomacy || usedSkill == Skill.Intimidation)
                         && target != null && target.QEffects.Any(qf => qf.Name == ACQUIRED_ASSET && qf.Source == creature))
                         {
                             return new Bonus(1, BonusType.Circumstance, "Acquired Asset",true);
