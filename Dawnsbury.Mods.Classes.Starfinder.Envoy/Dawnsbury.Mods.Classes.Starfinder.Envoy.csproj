@@ -1,11 +1,10 @@
-﻿<Project Sdk="Microsoft.NET.Sdk">
+<Project Sdk="Microsoft.NET.Sdk">
   <Import Project="../Dawnsbury.Mod.targets" />
   <PropertyGroup>
     <InstallIntoDevelopmentEnvironment>false</InstallIntoDevelopmentEnvironment>
   </PropertyGroup>
   <ItemGroup>
     <ProjectReference Include="..\Dawnsbury.Mods.StarfinderSharedFunctionality\Dawnsbury.Mods.StarfinderSharedFunctionality.csproj" />
-    <ProjectReference Include="..\Dawnsbury.Mods.Weapons.StellarCannon\Dawnsbury.Mods.Weapons.StarfinderWeapons.csproj" />
   </ItemGroup>
   <ItemGroup>
     <None Update="ORC_Licence_Attribution\ORC copyright notice.html">

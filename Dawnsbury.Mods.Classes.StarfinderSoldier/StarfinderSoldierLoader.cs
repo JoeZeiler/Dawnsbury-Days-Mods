@@ -20,6 +20,7 @@ using Dawnsbury.Core.Mechanics.Treasure;
 using Dawnsbury.Core.CharacterBuilder.Selections.Options;
 using Dawnsbury.Display.Illustrations;
 using System.IO;
+using Dawnsbury.Mods.StarfinderSharedFunctionality;
 
 namespace Dawnsbury.Mods.Classes.StarfinderSoldier;
 
@@ -310,7 +311,7 @@ public class StarfinderSoldierLoader
                         {
                             chosenTarget.RemoveAllQEffects(ef => ef.Name == "Suppressed");
                         }
-                        chosenTarget.AddQEffect(SoldierStatusEffects.GenerateSupressedEffect(action.Owner).WithExpirationAtStartOfSourcesTurn(action.Owner, 1));
+                        chosenTarget.AddQEffect(StatusEffects.GenerateSupressedEffect(action.Owner).WithExpirationAtStartOfSourcesTurn(action.Owner, 1));
                     }
                 }
             }

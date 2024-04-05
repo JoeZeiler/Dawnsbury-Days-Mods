@@ -9,11 +9,15 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Dawnsbury.Mods.Feats.Genera
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Dawnsbury.Mods.Classes.StarfinderSoldier", "Dawnsbury.Mods.Classes.StarfinderSoldier\Dawnsbury.Mods.Classes.StarfinderSoldier.csproj", "{E783DA53-AC55-4DCE-AE9F-697BA9986630}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MapReaderUtility", "MapReaderUtility\MapReaderUtility.csproj", "{8C836647-7A31-43D9-BDE9-E1AB8663BFB1}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "MapReaderUtility", "MapReaderUtility\MapReaderUtility.csproj", "{8C836647-7A31-43D9-BDE9-E1AB8663BFB1}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Dawnsbury.Mods.Ancestries.Starfinder", "Dawnsbury.Mods.Ancestries.StarfinderAndroid\Dawnsbury.Mods.Ancestries.Starfinder.csproj", "{DD9F7620-ED5F-4018-A125-CD06597D0543}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Dawnsbury.Mods.Ancestries.Starfinder", "Dawnsbury.Mods.Ancestries.StarfinderAndroid\Dawnsbury.Mods.Ancestries.Starfinder.csproj", "{DD9F7620-ED5F-4018-A125-CD06597D0543}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Dawnsbury.Mods.Creatures.Starfinder.Playtest", "Dawnsbury.Mods.Creatures.Starfinder.Playtest\Dawnsbury.Mods.Creatures.Starfinder.Playtest.csproj", "{570AE340-22D1-4A42-9839-6B21CCCA3F3E}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Dawnsbury.Mods.Creatures.Starfinder.Playtest", "Dawnsbury.Mods.Creatures.Starfinder.Playtest\Dawnsbury.Mods.Creatures.Starfinder.Playtest.csproj", "{570AE340-22D1-4A42-9839-6B21CCCA3F3E}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Dawnsbury.Mods.Classes.Starfinder.Envoy", "Dawnsbury.Mods.Classes.Starfinder.Envoy\Dawnsbury.Mods.Classes.Starfinder.Envoy.csproj", "{8090AF66-13E6-4985-8130-5046898B7F8C}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Dawnsbury.Mods.StarfinderSharedFunctionality", "Dawnsbury.Mods.StarfinderSharedFunctionality\Dawnsbury.Mods.StarfinderSharedFunctionality.csproj", "{09ECBE10-D737-4CEF-8DAD-3AE11F9CD8B5}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -45,6 +49,14 @@ Global
 		{570AE340-22D1-4A42-9839-6B21CCCA3F3E}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{570AE340-22D1-4A42-9839-6B21CCCA3F3E}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{570AE340-22D1-4A42-9839-6B21CCCA3F3E}.Release|Any CPU.Build.0 = Release|Any CPU
+		{8090AF66-13E6-4985-8130-5046898B7F8C}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{8090AF66-13E6-4985-8130-5046898B7F8C}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{8090AF66-13E6-4985-8130-5046898B7F8C}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{8090AF66-13E6-4985-8130-5046898B7F8C}.Release|Any CPU.Build.0 = Release|Any CPU
+		{09ECBE10-D737-4CEF-8DAD-3AE11F9CD8B5}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{09ECBE10-D737-4CEF-8DAD-3AE11F9CD8B5}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{09ECBE10-D737-4CEF-8DAD-3AE11F9CD8B5}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{09ECBE10-D737-4CEF-8DAD-3AE11F9CD8B5}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
