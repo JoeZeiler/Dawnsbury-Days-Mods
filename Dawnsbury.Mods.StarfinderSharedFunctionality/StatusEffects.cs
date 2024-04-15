@@ -2,12 +2,9 @@
 using Dawnsbury.Core.Creatures;
 using Dawnsbury.Core.Mechanics;
 
-namespace Dawnsbury.Mods.Classes.StarfinderSoldier
+namespace Dawnsbury.Mods.StarfinderSharedFunctionality
 {
-    /// <summary>
-    /// generates status effects the soldier needs
-    /// </summary>
-    public class SoldierStatusEffects
+    public class StatusEffects
     {
         /// <summary>
         /// generates the status effect "supressed".
@@ -16,7 +13,7 @@ namespace Dawnsbury.Mods.Classes.StarfinderSoldier
         /// <returns>the suppressed effect</returns>
         public static QEffect GenerateSupressedEffect(Creature Supressor)
         {
-            QEffect effect = new QEffect("Suppressed", "You have a -1 circumstance penalty to attack rolls and a -10-foot status penalty to your Speed.", ExpirationCondition.CountsDownAtStartOfSourcesTurn, Supressor, IllustrationName.TakeCover)
+            QEffect effect = new QEffect("Suppressed", "You have a -1 circumstance penalty to attack rolls and a -5-foot status penalty to your Speed.", ExpirationCondition.CountsDownAtStartOfSourcesTurn, Supressor, IllustrationName.TakeCover)
             {
                 BonusToAttackRolls = (qfSelf, combatAction, target) =>
                 {

@@ -17,6 +17,7 @@ using System;
 using System.Linq;
 using System.Threading.Tasks;
 using Dawnsbury.Core.Roller;
+using Dawnsbury.Mods.StarfinderSharedFunctionality;
 
 namespace Dawnsbury.Mods.Classes.StarfinderSoldier
 {
@@ -96,7 +97,7 @@ namespace Dawnsbury.Mods.Classes.StarfinderSoldier
                                             {
                                                 target.RemoveAllQEffects(ef => ef.Name == "Suppressed");
                                             }
-                                            target.AddQEffect(SoldierStatusEffects.GenerateSupressedEffect(caster).WithExpirationAtStartOfSourcesTurn(caster, 1));
+                                            target.AddQEffect(StatusEffects.GenerateSupressedEffect(caster).WithExpirationAtStartOfSourcesTurn(caster, 1));
                                         }
                                     });
                                     pinDownAction.Illustration = IllustrationName.TakeCover;
