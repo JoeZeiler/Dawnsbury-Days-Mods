@@ -47,7 +47,7 @@ namespace Dawnsbury.Mods.Classes.Starfinder.Envoy
                                         await efx(spell, caster,target,checkResult);
                                         if(checkResult is CheckResult.Success || checkResult is CheckResult.CriticalSuccess)
                                         {
-                                            target.AddQEffect(StarfinderSharedFunctionality.StatusEffects.GenerateSupressedEffect(caster));
+                                            target.AddQEffect(StatusEffects.GenerateSupressedEffect(caster));
                                         }
                                     });
                                 }

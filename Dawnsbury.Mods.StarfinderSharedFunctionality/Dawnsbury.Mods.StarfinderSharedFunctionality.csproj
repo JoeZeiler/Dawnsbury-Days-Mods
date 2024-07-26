@@ -2,5 +2,6 @@
   <Import Project="../Dawnsbury.Mod.targets" />
   <PropertyGroup>
     <InstallIntoDevelopmentEnvironment>false</InstallIntoDevelopmentEnvironment>
+    <TargetFramework>net8.0-windows7.0</TargetFramework>
   </PropertyGroup>
 </Project>

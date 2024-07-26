@@ -17,7 +17,6 @@ using System;
 using System.Linq;
 using System.Threading.Tasks;
 using Dawnsbury.Core.Roller;
-using Dawnsbury.Mods.StarfinderSharedFunctionality;
 
 namespace Dawnsbury.Mods.Classes.StarfinderSoldier
 {
