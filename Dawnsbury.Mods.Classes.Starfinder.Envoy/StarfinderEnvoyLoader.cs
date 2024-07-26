@@ -103,19 +103,12 @@ namespace Dawnsbury.Mods.Classes.Starfinder.Envoy
                 new QEffect("Saw It Coming {icon:FreeAction}","{b}Trigger{/b} You are about to roll initiative." +
                 "\nYou get a +1 circumstance bonus to your initiative roll, and you can immediately Step or Stride.")
                 {
+                    BonusToInitiative = (qfself) =>
+                    {
+                        return new Bonus(1, BonusType.Circumstance, "Saw It Coming", true);
+                    },
                     StartOfCombat = async (qfSelf) =>
                     {
-                        if (!creature.HasFeat(FeatName.IncredibleInitiative) && creature.Battle.InitiativeOrder.First() != creature)
-                        {
-                            var creatures = creature.Battle.AllCreatures.Where(c => c.Initiative == creature.Initiative && !creature.FriendOf(c));
-                            if (creatures.Any())
-                            {
-                                var creatureToPass = creature.Battle.InitiativeOrder.First(c => creatures.Contains(c));
-                                int targetIndex = creature.Battle.InitiativeOrder.IndexOf(creatureToPass);
-                                creature.Initiative = creature.Initiative + 1;
-                                creature.Battle.MoveInInitiativeOrder(creature, targetIndex);
-                            }
-                        }
                         await creature.StrideAsync("Saw it Coming: Stride or Step", true, allowCancel: true);
                     }
                 }
@@ -411,6 +404,36 @@ namespace Dawnsbury.Mods.Classes.Starfinder.Envoy
                     }
                 });
             }).WithCustomName("Wise to the Game");
+        }
+    }
+
+    public class StatusEffects
+    {
+        /// <summary>
+        /// generates the status effect "supressed".
+        /// </summary>
+        /// <param name="Supressor">the creature suppressing others</param>
+        /// <returns>the suppressed effect</returns>
+        public static QEffect GenerateSupressedEffect(Creature Supressor)
+        {
+            QEffect effect = new QEffect("Suppressed", "You have a -1 circumstance penalty to attack rolls and a -5-foot status penalty to your Speed.", ExpirationCondition.CountsDownAtStartOfSourcesTurn, Supressor, IllustrationName.TakeCover)
+            {
+                BonusToAttackRolls = (qfSelf, combatAction, target) =>
+                {
+                    if (combatAction.Traits.Contains(Core.Mechanics.Enumerations.Trait.Strike))
+                    {
+                        return new Core.Mechanics.Core.Bonus(-1, Core.Mechanics.Core.BonusType.Circumstance, "Suppressed", false);
+                    }
+                    return null;
+                },
+                BonusToAllSpeeds = (qfSelf) =>
+                {
+                    return new Core.Mechanics.Core.Bonus(-2, Core.Mechanics.Core.BonusType.Status, "Suppressed", false);
+                }
+            };
+            effect.Illustration = IllustrationName.TakeCover;
+
+            return effect;
         }
     }
 }

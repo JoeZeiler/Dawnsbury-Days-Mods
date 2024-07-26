@@ -2,9 +2,9 @@
   <Import Project="../Dawnsbury.Mod.targets" />
   <PropertyGroup>
     <InstallIntoDevelopmentEnvironment>false</InstallIntoDevelopmentEnvironment>
+    <TargetFramework>net8.0-windows7.0</TargetFramework>
   </PropertyGroup>
   <ItemGroup>
-    <ProjectReference Include="..\Dawnsbury.Mods.StarfinderSharedFunctionality\Dawnsbury.Mods.StarfinderSharedFunctionality.csproj" />
     <ProjectReference Include="..\Dawnsbury.Mods.Weapons.StellarCannon\Dawnsbury.Mods.Weapons.StarfinderWeapons.csproj" />
   </ItemGroup>
   <ItemGroup>
@@ -13,6 +13,6 @@
     </None>
   </ItemGroup>
   <Target Name="PostBuild" AfterTargets="PostBuildEvent">
-    <Exec Command="xcopy &quot;$(TargetDir)ORC_Licence_Attribution\ORC copyright notice.html&quot; &quot;$(TargetDir)Workshop Content&quot; /Y /I /E&#xD;&#xA;copy /Y &quot;$(TargetDir)$(ProjectName).dll&quot; &quot;$(TargetDir)Workshop Content\CustomMods\$(ProjectName).dll&quot;&#xD;&#xA;copy /Y &quot;$(TargetDir)Dawnsbury.Mods.StarfinderSharedFunctionality.dll&quot; &quot;$(TargetDir)Workshop Content\CustomMods\Dawnsbury.Mods.StarfinderSharedFunctionality.dll&quot;" />
+    <Exec Command="xcopy &quot;$(TargetDir)ORC_Licence_Attribution\ORC copyright notice.html&quot; &quot;$(TargetDir)Workshop Content\&quot; /Y /I /E /F /R&#xD;&#xA;xcopy &quot;$(TargetDir)$(ProjectName).dll&quot; &quot;$(TargetDir)Workshop Content\CustomMods\&quot; /Y /I /F /R&#xD;&#xA;" />
   </Target>
 </Project>

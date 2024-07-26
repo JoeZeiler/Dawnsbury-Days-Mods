@@ -13,6 +13,7 @@
   </ItemGroup>
 	<PropertyGroup>
 		<InstallIntoDevelopmentEnvironment>false</InstallIntoDevelopmentEnvironment>
+    <TargetFramework>net8.0-windows7.0</TargetFramework>
 	</PropertyGroup>
 	<Target Name="PostBuild" AfterTargets="PostBuildEvent">
 	  <Exec Command="xcopy &quot;$(TargetDir)BonMotResources\*.*&quot; &quot;$(TargetDir)Workshop Content\CustomMods\BonMotResources&quot; /Y /I /E&#xD;&#xA;xcopy &quot;$(TargetDir)OGL_License\OGL copyright notice.html&quot; &quot;$(TargetDir)Workshop Content&quot; /Y /I /E&#xD;&#xA;copy /Y &quot;$(TargetDir)$(ProjectName).dll&quot; &quot;$(TargetDir)Workshop Content\CustomMods\$(ProjectName).dll&quot;" />
